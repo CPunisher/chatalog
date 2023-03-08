@@ -1,0 +1,15 @@
+{
+  "include": [
+    "node-service/**/*"
+  ],
+  "compilerOptions": {
+    "sourceMap": true,
+    "outDir": "dist/node-service",
+    "strict": true,
+    "skipLibCheck": true,
+    "lib": [
+      "ES2020"
+    ],
+    "esModuleInterop": true
+  }
+}
