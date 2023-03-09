@@ -2,11 +2,10 @@
   "name": "chatalog",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "tsx node-service/index.ts",
-    "start": "node dist/node-service/index.js",
+    "cli": "tsx chatalog-cli/index.ts",
     "build": "tsc"
   },
   "keywords": [],
@@ -18,7 +17,9 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@commander-js/extra-typings": "^10.0.3",
     "chatgpt": "^5.0.8",
+    "commander": "^10.0.0",
     "express": "^4.18.2",
     "https-proxy-agent": "^5.0.1",
     "node-fetch": "^3.3.0"
