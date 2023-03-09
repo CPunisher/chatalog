@@ -49,6 +49,7 @@ datalog.action(async (directories, options) => {
   for (const dir of directories) {
     const grouped = await groupDatalogFiles(dir);
     const resultTemplate = templateFn(grouped);
+    console.log(resultTemplate);
   }
 });
 
