@@ -1,5 +1,6 @@
 node_modules
 *.log
 dist
+output
 .vscode/launch.json
 .vscode/tasks.json

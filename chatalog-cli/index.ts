@@ -1,6 +1,6 @@
 import { Command } from "commander";
-import datalog from "./datalog";
+import CommandGenerteTemplate from "./generate-template";
 
 const program = new Command("chatalog");
-program.addCommand(datalog);
+program.addCommand(CommandGenerteTemplate);
 program.parse();
