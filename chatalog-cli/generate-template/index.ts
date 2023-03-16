@@ -4,6 +4,7 @@ import fs from "fs";
 import fsPromises from "fs/promises";
 import path from "path";
 import { DatalogFile, GroupedDatalogFiles } from "./interface";
+import Progress from "../util/progress";
 
 async function createDatalogFile(filename: string): Promise<DatalogFile> {
   const parsed = path.parse(filename);
@@ -66,10 +67,10 @@ export async function generateTemplate(
   const templateFn = await parseFromJs(template);
   const result = [];
 
-  let current = 0;
+  const progess = new Progress(directories.length);
   for (const dir of directories) {
-    current++;
-    console.log(`[${current}/${directories.length}] Processing ${dir}`);
+    progess.plus();
+    progess.log(`Processing ${dir}`);
     if (!fs.existsSync(dir)) {
       console.error(`${dir} doesn't exists!`);
       continue;
