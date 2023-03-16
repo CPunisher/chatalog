@@ -25,7 +25,10 @@ function loadConfig(): ChatGPTAPIConfig {
 export default async function useChatGPT(app: Express) {
   const { ChatGPTUnofficialProxyAPI } = await import("chatgpt");
   const config = loadConfig();
+  // console.log(`🔧 Loaded config: ${JSON.stringify(config, null, 2)}`);
+
   const api = new ChatGPTUnofficialProxyAPI({
+    apiReverseProxyUrl: "https://gpt.pawan.krd/backend-api/conversation",
     accessToken: config.token,
     fetch: (input: string, init: object) =>
       nodeFetch(input, {
