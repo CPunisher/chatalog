@@ -3,7 +3,7 @@ import { parseFromJs } from "./parser";
 import fs from "fs";
 import fsPromises from "fs/promises";
 import path from "path";
-import { DatalogFile, GroupedDatalogFiles } from "./interface";
+import { DatalogFile, GroupedDatalogFiles } from "../interface";
 import Progress from "../util/progress";
 
 async function createDatalogFile(filename: string): Promise<DatalogFile> {
@@ -41,6 +41,7 @@ async function groupDatalogFiles(dir: string): Promise<GroupedDatalogFiles> {
     facts: await Promise.all(facts),
     expected: await Promise.all(expected),
     rules: await Promise.all(rules),
+    messages: [],
   };
 }
 
@@ -65,7 +66,7 @@ export async function generateTemplate(
 ) {
   const { template, outDir } = options;
   const templateFn = await parseFromJs(template);
-  const result = [];
+  const result: GroupedDatalogFiles[] = [];
 
   const progess = new Progress(directories.length);
   for (const dir of directories) {
@@ -82,10 +83,8 @@ export async function generateTemplate(
 
     const grouped = await groupDatalogFiles(dir);
     const resultTemplate = templateFn(grouped);
-    result.push({
-      ...grouped,
-      resultTemplate,
-    });
+    grouped.messages.push({ content: resultTemplate });
+    result.push(grouped);
 
     if (emit) {
       if (!fs.existsSync(outDir)) {

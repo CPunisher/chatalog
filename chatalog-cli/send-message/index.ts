@@ -5,6 +5,7 @@ import path from "path";
 import fs from "fs";
 import fsPromises from "fs/promises";
 import Progress from "../util/progress";
+import { GroupedDatalogFiles } from "../interface";
 
 const CommandSendMessage = new Command("send-message");
 CommandSendMessage.option(
@@ -34,7 +35,10 @@ export async function sendMessage(options: any) {
       console.error(`${source} doesn't exist!`);
     }
 
-    const template = JSON.parse((await fsPromises.readFile(source)).toString());
+    const template: GroupedDatalogFiles = JSON.parse(
+      (await fsPromises.readFile(source)).toString()
+    );
+
     await retry(
       async () => {
         const response = await nodeFetch(target, {
@@ -43,11 +47,11 @@ export async function sendMessage(options: any) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            message: template.resultTemplate,
+            message: template.messages[0].content,
           }),
         });
         const { message } = (await response.json()) as any;
-        template["output"] = message;
+        template.messages.push({ content: message });
         if (!fs.existsSync(outDir)) {
           fs.mkdirSync(outDir, { recursive: true });
         }

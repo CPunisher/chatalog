@@ -8,7 +8,7 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "dev": "tsx node-service/index.ts",
+    "node-service": "tsx node-service/index.ts",
     "cli": "tsx chatalog-cli/index.ts",
     "build": "tsc"
   },
