@@ -1,16 +1,17 @@
 {
   "name": "chatalog",
   "version": "1.0.0",
-  "description": "",
+  "description": "CLI and node service that assist studying the effects of LLM synthesizing programs",
+  "author": "CPunisher",
+  "license": "MIT",
+  "homepage": "https://github.com/CPunisher/chatalog",
+  "keywords": [],
   "main": "index.js",
   "scripts": {
     "dev": "tsx node-service/index.ts",
     "cli": "tsx chatalog-cli/index.ts",
     "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/async-retry": "^1.4.5",
     "@types/express": "^4.17.17",
