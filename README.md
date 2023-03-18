@@ -47,16 +47,21 @@ Commands:
 To generate questions with the specific template
 
 ```sh
-pnpm run cli generate-template -t $(pwd)/templates/1_all_name_content.js -o ./output/templates ~/kd_bench/adjacent-to-rend ~/kd_bench/graph-coloring
+pnpm run cli generate-template \
+  -t $(pwd)/templates/1_all_name_content.js \
+  -o ./output/templates \
+  ~/kd_bench/adjacent-to-rend ~/kd_bench/graph-coloring
 ```
 
 To generate answers by requesting ChatGPT api, you should first launch your node service, then run
 
 ```sh
-pnpm run cli send-message -t http://0.0.0.0:4000/message -o ./output/messages -s template1.json template2.json
-``
+pnpm run cli send-message \
+  -t http://0.0.0.0:4000/message \
+  -o ./output/messages \
+  -s template1.json template2.json
+```
 
 ---
 
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
-```
