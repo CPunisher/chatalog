@@ -1,9 +1,12 @@
 {
   "include": [
     "node-service/**/*",
-    "chatalog-cli/**/*"
+    "chatalog-cli/**/*",
+    "report-page"
   ],
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "sourceMap": true,
     "outDir": "dist",
     "strict": true,

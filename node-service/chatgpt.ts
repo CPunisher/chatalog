@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import createHttpsProxyAgent from "https-proxy-agent";
-import nodeFetch from "node-fetch";
+import nodeFetch, { RequestInit } from "node-fetch";
 
 interface ChatGPTAPIConfig {
   token: string;
@@ -30,11 +30,11 @@ export default async function useChatGPT(app: Express) {
   const api = new ChatGPTUnofficialProxyAPI({
     apiReverseProxyUrl: "https://gpt.pawan.krd/backend-api/conversation",
     accessToken: config.token,
-    fetch: (input: string, init: object) =>
-      nodeFetch(input, {
+    fetch: (input: RequestInfo | URL, init?: object) =>
+      nodeFetch(input as any, {
         agent: config.proxy ? createHttpsProxyAgent(config.proxy) : undefined,
         ...init,
-      }),
+      }) as any,
   });
 
   app.post("/message", async (req, res) => {
