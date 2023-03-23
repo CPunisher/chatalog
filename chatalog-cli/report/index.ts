@@ -48,12 +48,14 @@ export async function report(data: string[], options: any) {
   const groupdFiles: GroupedDatalogFiles[] = await Promise.all(
     data.map(async (s) => JSON.parse((await fsPromise.readFile(s)).toString()))
   );
-  const script = await fsPromise.readFile(
-    path.join(__dirname, "../../report-page/index.js")
-  );
+  const [style, script] = await Promise.all([
+    // fsPromise.readFile(path.join(__dirname, "../../report-page/index.css")),
+    Promise.resolve(""),
+    fsPromise.readFile(path.join(__dirname, "../../report-page/index.js")),
+  ]);
   const html = buildHtmlTemplate(
     "Title",
-    "",
+    style.toString(),
     script.toString(),
     JSON.stringify(groupdFiles)
   );
