@@ -50,7 +50,7 @@ const Conversation: FunctionalComponent = () => {
   }
 
   return (
-    <div class="flex h-full flex-col pl-[260px] overflow-auto">
+    <div class="flex h-full flex-col overflow-auto">
       {current.messages.map((message, index) => (
         <Message
           content={message.content}
