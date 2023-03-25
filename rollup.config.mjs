@@ -1,6 +1,7 @@
 import { defineConfig } from "rollup";
 import typescript from "@rollup/plugin-typescript";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 import tailwindcss from "tailwindcss";
 import postcss from "rollup-plugin-postcss";
 import autoprefixer from "autoprefixer";
@@ -13,15 +14,18 @@ export default defineConfig({
     file: "dist/report-page/index.js",
     name: "renderReports",
     exports: "named",
+    sourcemap: false,
   },
   plugins: [
     typescript({
       module: "esnext",
       compilerOptions: {
         outDir: "dist/report-page",
+        sourceMap: false,
       },
     }),
-    nodeResolve(),
+    nodeResolve({ browser: true }),
+    commonjs(),
     postcss({
       extensions: [".css"],
       plugins: [autoprefixer(), tailwindcss(tailwindConfig)],

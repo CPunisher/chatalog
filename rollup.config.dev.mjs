@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     ...config.plugins,
     serve({
-      contentBase: "./output/",
+      contentBase: ".",
       port: 8000,
     }),
     livereload({
