@@ -9,6 +9,7 @@ import { FunctionalComponent } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import ReportContext from "../context";
 import souffle from "../utils/language-souffle";
+import "highlight.js/styles/atom-one-dark.css";
 
 interface MessageProps {
   content: string;

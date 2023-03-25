@@ -8,7 +8,7 @@ function preElementSelector(): Test {
     !!node &&
     node.type === "element" &&
     "tagName" in node &&
-    node.tagName === "pre";
+    node.tagName === "code";
 }
 
 const rehypeSouffle: unifiedTypes.Plugin<[], Element> = () => {
