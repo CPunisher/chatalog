@@ -14,7 +14,10 @@ const Sidebar: FunctionalComponent = () => {
               "flex py-3 px-3 items-center gap-3 rounded-md cursor-pointer break-all hover:bg-zinc-700",
               { "bg-zinc-700": group === current }
             )}
-            onClick={() => setCurrent?.(group)}
+            onClick={() => {
+              setCurrent?.(group);
+              window.scrollTo(0, 0);
+            }}
           >
             <div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">
               {group.name ?? "Unknown"}
