@@ -1,12 +1,13 @@
 import classNames from "classnames";
 import { FunctionalComponent, VNode } from "preact";
-import { useState } from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
 import { GroupedDatalogFiles } from "../../chatalog-cli/interface";
-import ReportContext from "../context";
+import ReportContext, { PageMode, ReportContextProps } from "../context";
 import Conversation from "./Conversation";
 import File from "./File";
 import Result from "./Result";
 import Sidebar from "./Sidebar";
+import Summary from "./Summary";
 
 type TabType = "conversation" | "file" | "result";
 
@@ -50,13 +51,26 @@ interface MainProps {
 }
 
 const Main: FunctionalComponent<MainProps> = ({ data }) => {
-  const [current, setCurrent] = useState(data[0]);
+  const [mode, setMode] = useState<PageMode>("item");
+  const [current, _setCurrent] = useState(data[0]);
   const [tab, setTab] = useState<TabType>("conversation");
+  const setCurrent: ReportContextProps["setCurrent"] = useCallback(
+    (newCurrent) => {
+      if (typeof newCurrent === "string") {
+        setMode(newCurrent);
+      } else {
+        setMode("item");
+        _setCurrent(newCurrent);
+      }
+    },
+    []
+  );
 
   return (
     <ReportContext.Provider
       value={{
         data,
+        mode,
         current,
         setCurrent,
       }}
@@ -64,12 +78,15 @@ const Main: FunctionalComponent<MainProps> = ({ data }) => {
       <div class="overflow-hidden w-full h-full">
         <Sidebar />
         <div class="pl-[260px]">
-          <Tabs
-            tabs={TAB_TYPES}
-            tab={tab}
-            setTab={setTab}
-            slots={[<Conversation />, <File />, <Result />]}
-          />
+          {mode === "item" && (
+            <Tabs
+              tabs={TAB_TYPES}
+              tab={tab}
+              setTab={setTab}
+              slots={[<Conversation />, <File />, <Result />]}
+            />
+          )}
+          {mode === "test summary" && <Summary />}
         </div>
       </div>
     </ReportContext.Provider>
