@@ -38,6 +38,7 @@ async function groupDatalogFiles(dir: string): Promise<GroupedDatalogFiles> {
   }
 
   return {
+    name: path.basename(dir),
     facts: await Promise.all(facts),
     expected: await Promise.all(expected),
     rules: await Promise.all(rules),

@@ -17,7 +17,7 @@ const Sidebar: FunctionalComponent = () => {
             onClick={() => setCurrent?.(group)}
           >
             <div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">
-              {group.rules[0].name}
+              {group.name ?? "Unknown"}
             </div>
           </a>
         ))}
