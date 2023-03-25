@@ -2,6 +2,7 @@ import { defineConfig } from "rollup";
 import typescript from "@rollup/plugin-typescript";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import terser from '@rollup/plugin-terser';
 import tailwindcss from "tailwindcss";
 import postcss from "rollup-plugin-postcss";
 import autoprefixer from "autoprefixer";
@@ -30,5 +31,6 @@ export default defineConfig({
       extensions: [".css"],
       plugins: [autoprefixer(), tailwindcss(tailwindConfig)],
     }),
+    terser(),
   ],
 });

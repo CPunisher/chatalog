@@ -6,7 +6,7 @@ import classNames from "classnames";
 const Sidebar: FunctionalComponent = () => {
   const { data = [], current, setCurrent } = useContext(ReportContext) || {};
   return (
-    <div class="dark overflow-auto bg-zinc-800 p-2 space-y-1 md:fixed md:inset-y-0 md:flex md:w-[260px] md:flex-col">
+    <div class="dark overflow-auto bg-zinc-800 p-2 space-y-1 fixed inset-y-0 flex w-[260px] flex-col">
       <div class="flex flex-col gap-2 text-gray-100 text-sm">
         {data.map((group) => (
           <a
