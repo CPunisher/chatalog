@@ -41,7 +41,9 @@ export default async function useChatGPT(app: Express) {
     try {
       const { message } = req.body;
       console.log(`Received message: ${message}`);
-      const response = await api.sendMessage(message);
+      const response = await api.sendMessage(message, {
+        timeoutMs: 5 * 60 * 1000,
+      });
       return res.json({
         message: response.text,
       });

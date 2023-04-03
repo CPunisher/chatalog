@@ -1,28 +1,23 @@
 import { Command } from "commander";
 import retry from "async-retry";
 import nodeFetch from "node-fetch";
-import path from "path";
 import fs from "fs";
 import fsPromises from "fs/promises";
 import Progress from "../util/progress";
 import { GroupedDatalogFiles } from "../interface";
 
-const CommandSendMessage = new Command("send-message");
-CommandSendMessage.argument("<sources...>", "Template source JSON file");
-CommandSendMessage.requiredOption("-o, --outDir <dir>", "Output directory");
-CommandSendMessage.requiredOption(
+const CommandFixMessage = new Command("fix-message");
+CommandFixMessage.argument("<sources...>", "Template source JSON file");
+CommandFixMessage.requiredOption(
   "-r, --retries <retries>",
   "Max counts to retry in total",
   "5"
 );
-CommandSendMessage.requiredOption("-t, --target <url>", "ChatGPT request url");
-CommandSendMessage.action(sendMessage);
+CommandFixMessage.requiredOption("-t, --target <url>", "ChatGPT request url");
+CommandFixMessage.action(fix);
 
-export async function sendMessage(sources: string[], options: any) {
-  const { target, retries, outDir } = options;
-  if (!sources || sources.length === 0) {
-    // TODO: read from stdin
-  }
+export async function fix(sources: string[], options: any) {
+  const { target, retries } = options;
 
   const progress = new Progress(sources.length);
   for (const source of sources) {
@@ -36,6 +31,11 @@ export async function sendMessage(sources: string[], options: any) {
       (await fsPromises.readFile(source)).toString()
     );
 
+    if (!shouldFix(template)) {
+      progress.log(`Finish ${source}, which is no need to fix`);
+      continue;
+    }
+
     await retry(
       async () => {
         const response = await nodeFetch(target, {
@@ -48,13 +48,8 @@ export async function sendMessage(sources: string[], options: any) {
           }),
         });
         const { message } = (await response.json()) as any;
-        template.messages.push({ content: message });
-        if (!fs.existsSync(outDir)) {
-          fs.mkdirSync(outDir, { recursive: true });
-        }
-
-        const outFilePath = path.resolve(outDir, path.basename(source));
-        fsPromises.writeFile(outFilePath, JSON.stringify(template, null, 2));
+        template.messages[1].content = message;
+        fsPromises.writeFile(source, JSON.stringify(template, null, 2));
       },
       {
         retries,
@@ -68,4 +63,11 @@ export async function sendMessage(sources: string[], options: any) {
   }
 }
 
-export default CommandSendMessage;
+function shouldFix(template: GroupedDatalogFiles) {
+  return (
+    !template.messages[1] ||
+    template.messages[1].content === "Something went wrong"
+  );
+}
+
+export default CommandFixMessage;
