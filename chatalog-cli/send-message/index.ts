@@ -8,10 +8,7 @@ import Progress from "../util/progress";
 import { GroupedDatalogFiles } from "../interface";
 
 const CommandSendMessage = new Command("send-message");
-CommandSendMessage.option(
-  "-s, --sources <sources...>",
-  "Template source JSON file"
-);
+CommandSendMessage.argument("<sources...>", "Template source JSON file");
 CommandSendMessage.requiredOption("-o, --outDir <dir>", "Output directory");
 CommandSendMessage.requiredOption(
   "-r, --retries <retries>",
@@ -21,9 +18,9 @@ CommandSendMessage.requiredOption(
 CommandSendMessage.requiredOption("-t, --target <url>", "ChatGPT request url");
 CommandSendMessage.action(sendMessage);
 
-export async function sendMessage(options: any) {
-  const { sources, target, retries, outDir } = options;
-  if (!sources && sources.length === 0) {
+export async function sendMessage(sources: string[], options: any) {
+  const { target, retries, outDir } = options;
+  if (!sources || sources.length === 0) {
     // TODO: read from stdin
   }
 
