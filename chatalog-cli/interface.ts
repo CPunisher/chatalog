@@ -9,6 +9,7 @@ export interface ConvMessage {
 }
 
 export interface GroupedDatalogFiles {
+  name: string;
   facts: DatalogFile[];
   expected: DatalogFile[];
   rules: DatalogFile[];
