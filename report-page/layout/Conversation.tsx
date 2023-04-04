@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from "preact/hooks";
 import ReportContext from "../context";
 import souffle from "../utils/language-souffle";
 import "highlight.js/styles/atom-one-dark.css";
+import MessageItem from "../components/MessageItem";
 
 interface MessageProps {
   content: string;
@@ -30,15 +31,9 @@ const Message: FunctionalComponent<MessageProps> = ({ content, role }) => {
   }, [content]);
 
   return (
-    <div
-      class={classNames("w-full text-gray-800 border-b border-black/10", {
-        "bg-gray-50": role === "system",
-      })}
-    >
-      <div class="text-base whitespace-pre-wrap m-auto p-4 md:max-w-2xl md:py-6 lg:max-w-2xl xl:max-w-3xl">
-        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-      </div>
-    </div>
+    <MessageItem className={classNames({ "bg-gray-50": role === "system" })}>
+      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+    </MessageItem>
   );
 };
 

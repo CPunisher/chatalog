@@ -1,13 +1,13 @@
 import classNames from "classnames";
 import { FunctionalComponent, VNode } from "preact";
 import { useCallback, useState } from "preact/hooks";
-import { GroupedDatalogFiles } from "../../chatalog-cli/interface";
-import ReportContext, { PageMode, ReportContextProps } from "../context";
-import Conversation from "./Conversation";
-import File from "./File";
-import Result from "./Result";
-import Sidebar from "./Sidebar";
-import Summary from "./Summary";
+import { GroupedDatalogFiles } from "../chatalog-cli/interface";
+import ReportContext, { PageMode, ReportContextProps } from "./context";
+import Conversation from "./layout/Conversation";
+import File from "./layout/File";
+import Result from "./layout/Result";
+import Summary from "./layout/Summary";
+import Sidebar from "./components/Sidebar";
 
 type TabType = "conversation" | "file" | "result";
 
