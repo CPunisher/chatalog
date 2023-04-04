@@ -30,18 +30,31 @@ export default async function useSouffle(app: Express) {
     ]);
     // Run souffle, return output relation
     console.log("Running souffle for results...");
-    const { stdout, stderr } = await util.promisify(childProcess.exec)(
-      `souffle -F ${tmpDir} -D - ${rulePath}`
+    await util.promisify(childProcess.exec)(
+      `souffle -F ${tmpDir} -D ${tmpDir} ${rulePath}`
     );
-    // Delete tmp files
-    console.log(`Removing files in temporary directory: ${tmpDir}...`);
-    await Promise.all([
-      ...factPaths.map((path) => fsPromise.rm(path)),
-      fsPromise.rm(rulePath),
-    ]);
+    // Read result
+    console.log(`Reading from temporary directory: ${tmpDir}...`);
+    const files = await fsPromise.readdir(tmpDir);
+    const result = (
+      await Promise.all(
+        files
+          .filter((file) => file.endsWith(".csv"))
+          .map((file) => fsPromise.readFile(path.resolve(tmpDir, file)))
+      )
+    ).map((buffer) => buffer.toString());
 
+    // Delete tmp files
+    // console.log(`Removing files in temporary directory: ${tmpDir}...`);
+    // await Promise.all([
+    //   ...factPaths.map((path) => fsPromise.rm(path)),
+    //   fsPromise.rm(rulePath),
+    // ]);
+
+    console.log(`Complete!`);
+    console.log(result);
     res.json({
-      result: stdout,
+      result: result[0],
     });
   });
 }

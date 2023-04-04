@@ -14,6 +14,12 @@ export interface GroupedDatalogFiles {
   expected: DatalogFile[];
   rules: DatalogFile[];
   messages: ConvMessage[];
+  testResult?: TestResult;
 }
 
 export type TemplateFunction = (args: GroupedDatalogFiles) => string;
+
+export interface TestResult {
+  actual: string;
+  pass: boolean;
+}
