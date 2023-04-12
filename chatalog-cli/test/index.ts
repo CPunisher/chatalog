@@ -105,17 +105,19 @@ function checkResult(expected: string, actual: string) {
   const expectedList = expected
     .split(/\r?\n/)
     .map((row) => row.split(/\s+/))
+    .filter((row) => row && row[0]?.length > 0)
     .sort(compare);
   const actualList = actual
     .split(/\r?\n/)
     .map((row) => row.split(/\s+/))
+    .filter((row) => row && row[0]?.length > 0)
     .sort(compare);
   if (expectedList.length !== actualList.length) return false;
   for (let i = 0; i < expectedList.length; i++) {
     const row1 = expectedList[i];
     const row2 = actualList[i];
-    if (row1.length === row2.length) return false;
-    for (let j = 0; j < row1.length; i++) {
+    if (row1.length !== row2.length) return false;
+    for (let j = 0; j < row1.length; j++) {
       if (row1[j] !== row2[j]) return false;
     }
   }
