@@ -32,60 +32,65 @@ export async function test(sources: string[], options: any) {
 
     // Extract rule in template
     const answer = template.messages[1].content;
-    const answerRule = extractAnswerRule(answer);
-    if (answerRule === null) {
+    const answerRules = extractAnswerRule(answer);
+    if (answerRules.length == 0) {
       progress.log(`Finish ${source}, no answer rule is found`);
       continue;
     }
 
-    await retry(
-      async () => {
-        const response = await nodeFetch(target, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            facts: template.facts.map((fact) => ({
-              name: fact.name,
-              content: fact.content,
-            })),
-            rule: {
-              name: template.rules[0].name,
-              content: answerRule,
+    template.testResult = [];
+    for (const rule of answerRules) {
+      await retry(
+        async () => {
+          const response = await nodeFetch(target, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-          }),
-        });
-        const { result, error } = (await response.json()) as any;
-        template.testResult = {
-          actual: result,
-          pass: checkResult(template.expected[0].content, result),
-        };
-        fsPromises.writeFile(source, JSON.stringify(template, null, 2));
-      },
-      {
-        retries,
-        onRetry: (error) => {
-          console.error(`Getting reply failed, retrying...`);
-          console.error(error);
+            body: JSON.stringify({
+              facts: template.facts.map((fact) => ({
+                name: fact.name,
+                content: fact.content,
+              })),
+              rule: {
+                name: template.rules[0].name,
+                content: rule,
+              },
+            }),
+          });
+          const { result } = (await response.json()) as any;
+          template.testResult?.push({
+            code: "```datalog\n" + rule + "\n```",
+            actual: result,
+            pass: checkResult(template.expected[0].content, result),
+          });
         },
-      }
-    );
+        {
+          retries,
+          onRetry: (error) => {
+            console.error(`Getting reply failed, retrying...`);
+            console.error(error);
+          },
+        }
+      );
+    }
+    fsPromises.writeFile(source, JSON.stringify(template, null, 2));
     progress.log(`Finish ${source}`);
   }
 }
 
 function extractAnswerRule(answer: string) {
-  const end = answer.lastIndexOf("```");
-  const begin = answer.lastIndexOf("```", end - 1);
-  if (begin >= 0 && end >= 0) {
-    return answer
-      .substring(begin + 3, end)
-      .split("\n")
-      .slice(1)
-      .join("\n");
+  const PATTERN = /```(?:.*?)\n/gm;
+  const matches = [...answer.matchAll(PATTERN)];
+  const result: string[] = [];
+  for (let i = 0; i < matches.length; i += 2) {
+    const match = matches[i];
+    if (match.index) {
+      const next = matches[i + 1]?.index ?? answer.length;
+      result.push(answer.substring(match.index + match[0].length, next - 1));
+    }
   }
-  return null;
+  return result;
 }
 
 function compare(row1: string[], row2: string[]) {

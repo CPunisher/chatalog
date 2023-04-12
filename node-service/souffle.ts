@@ -1,8 +1,7 @@
 import type { Express } from "express";
-import { DatalogFile, GroupedDatalogFiles } from "../chatalog-cli/interface";
+import { DatalogFile } from "../chatalog-cli/interface";
 import fsPromise from "fs/promises";
 import path from "path";
-import util from "node:util";
 import childProcess from "child_process";
 
 type PartialFile = Pick<DatalogFile, "name" | "content">;
@@ -30,24 +29,31 @@ export default async function useSouffle(app: Express) {
     ]);
     // Run souffle, return output relation
     console.log("Running souffle for results...");
-    await new Promise<void>((resolve) => {
-      childProcess.exec(
-        `souffle -F ${tmpDir} -D ${tmpDir} ${rulePath}`,
-        async (error, _, stderr) => {
-          if (error) {
-            // Delete tmp files
-            console.log(`Removing files in temporary directory: ${tmpDir}...`);
-            await clear(tmpDir, [...factPaths, rulePath]);
-            console.log(`Complete with error!`);
-            res.json({
-              result: stderr,
-            });
-            return;
+    try {
+      await new Promise<void>((resolve, reject) => {
+        childProcess.exec(
+          `souffle -F ${tmpDir} -D ${tmpDir} ${rulePath}`,
+          async (error, _, stderr) => {
+            if (error) {
+              // Delete tmp files
+              console.log(
+                `Removing files in temporary directory: ${tmpDir}...`
+              );
+              await clear(tmpDir, [...factPaths, rulePath]);
+              console.log(`Complete with error!`);
+              res.json({
+                result: stderr,
+              });
+              reject(error);
+              return;
+            }
+            resolve();
           }
-          resolve();
-        }
-      );
-    });
+        );
+      });
+    } catch {
+      return;
+    }
 
     // Read result
     console.log(`Reading from temporary directory: ${tmpDir}...`);
@@ -64,12 +70,12 @@ export default async function useSouffle(app: Express) {
 
     console.log(`Complete!`);
     res.json({
-      result: result[0],
+      result: result[0] || "",
     });
   });
 }
 
 async function clear(tmpDir: string, files: string[]) {
   // Delete tmp files
-  await Promise.all([files.map((file) => fsPromise.rm(file))]);
+  // await Promise.all([files.map((file) => fsPromise.rm(file))]);
 }
