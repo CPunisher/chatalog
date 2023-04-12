@@ -80,7 +80,7 @@ export async function test(sources: string[], options: any) {
 }
 
 function extractAnswerRule(answer: string) {
-  const PATTERN = /```(?:.*?)\n/gm;
+  const PATTERN = /```(?:.*?)(?:\n|$)/gm;
   const matches = [...answer.matchAll(PATTERN)];
   const result: string[] = [];
   for (let i = 0; i < matches.length; i += 2) {
