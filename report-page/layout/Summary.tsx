@@ -66,7 +66,10 @@ const Collapse: FunctionalComponent<CollapseProps> = ({
   const [collapsed, setCollapsed] = useState(true);
   return (
     <div className={classNames("", className)}>
-      <div className="font-bold" onClick={() => setCollapsed(!collapsed)}>
+      <div
+        className="font-bold cursor-pointer"
+        onClick={() => setCollapsed(!collapsed)}
+      >
         {collapsed ? "点击展开折叠列表" : "点击收起折叠列表"}
       </div>
       <div className={classNames({ hidden: collapsed })}>{children}</div>
