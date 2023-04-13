@@ -1,7 +1,8 @@
-import { FunctionalComponent } from "preact";
-import { useContext } from "preact/hooks";
+import { FunctionalComponent, VNode } from "preact";
+import { useContext, useState } from "preact/hooks";
 import ReportContext from "../context";
 import { GroupedDatalogFiles } from "../../chatalog-cli/interface";
+import classNames from "classnames";
 
 interface SummaryData {
   total: number;
@@ -54,60 +55,75 @@ function summary(data: GroupedDatalogFiles[]): SummaryData {
   return summaryData;
 }
 
+interface CollapseProps {
+  className?: string;
+}
+
+const Collapse: FunctionalComponent<CollapseProps> = ({
+  className,
+  children,
+}) => {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <div className={classNames("", className)}>
+      <div className="font-bold" onClick={() => setCollapsed(!collapsed)}>
+        {collapsed ? "点击展开折叠列表" : "点击收起折叠列表"}
+      </div>
+      <div className={classNames({ hidden: collapsed })}>{children}</div>
+    </div>
+  );
+};
+
 const Summary: FunctionalComponent = () => {
   const { data } = useContext(ReportContext) || {};
   const summaryData = summary(data ?? []);
 
   return (
-    <div>
-      <div>
+    <div className="w-full space-y-4">
+      <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
         <span>正确用例/总用例: </span>
         <span>
           {summaryData.trueCase} / {summaryData.total}
         </span>
       </div>
-      <div>
-        <span>正确率:</span>
+      <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
+        <span>正确率: </span>
         <span>
           {((summaryData.trueCase / summaryData.total) * 100).toFixed(2)}%
         </span>
-        <ul>
+        <Collapse>
           {summaryData.trueList.map((e) => (
             <li>{e.name}</li>
           ))}
-        </ul>
+        </Collapse>
       </div>
-      {/* 列表 */}
-      <div>
-        <span>运行结果不一致</span>
+      <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
+        <span>运行结果不一致: </span>
         <span>{summaryData.unexpectedCase}</span>
-        <ul>
+        <Collapse>
           {summaryData.unexpectedList.map((e) => (
             <li>{e.name}</li>
           ))}
-        </ul>
+        </Collapse>
       </div>
-      {/* 列表 */}
-      <div>
-        <span>空代码</span>
+      <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
+        <span>空代码: </span>
         <span>{summaryData.emptyCase}</span>
-        <ul>
+        <Collapse>
           {summaryData.emptyList.map((e) => (
             <li>{e.name}</li>
           ))}
-        </ul>
+        </Collapse>
       </div>
-      {/* 列表 */}
-      <div>
-        <span>语法错误:</span>
+      <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
+        <span>语法错误: </span>
         <span>{summaryData.syntaxCase}</span>
-        <ul>
+        <Collapse>
           {summaryData.syntaxList.map((e) => (
             <li>{e.name}</li>
           ))}
-        </ul>
+        </Collapse>
       </div>
-      {/* 列表 */}
     </div>
   );
 };
