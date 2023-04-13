@@ -41,11 +41,11 @@ function summary(data: GroupedDatalogFiles[]): SummaryData {
         // 空结果
         summaryData.emptyCase++;
         summaryData.emptyList.push(entry);
-      } else if (testResult.some((r) => !r.actual.includes("syntax error"))) {
+      } else if (testResult.some((r) => !r.actual.includes("Error:"))) {
         // 存在一个不是语法错误的 false case
         summaryData.unexpectedCase++;
         summaryData.unexpectedList.push(entry);
-      } else if (testResult.some((r) => r.actual.includes("syntax error"))) {
+      } else if (testResult.some((r) => r.actual.includes("Error:"))) {
         // 语法错误
         summaryData.syntaxCase++;
         summaryData.syntaxList.push(entry);
