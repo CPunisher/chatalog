@@ -28,7 +28,8 @@ export default async function useChatGPT(app: Express) {
   // console.log(`🔧 Loaded config: ${JSON.stringify(config, null, 2)}`);
 
   const api = new ChatGPTUnofficialProxyAPI({
-    apiReverseProxyUrl: "https://gpt.pawan.krd/backend-api/conversation",
+    // apiReverseProxyUrl: "https://gpt.pawan.krd/backend-api/conversation",
+    apiReverseProxyUrl: "https://freechat.xyhelper.cn/backend-api/conversation",
     accessToken: config.token,
     fetch: (input: RequestInfo | URL, init?: object) =>
       nodeFetch(input as any, {
