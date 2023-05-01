@@ -15,6 +15,8 @@ export default async function useSouffle(app: Express) {
   app.post("/souffle", async (req, res) => {
     const { facts, rule } = req.body as Params;
     const tmpDir = "/tmp";
+    await clear(tmpDir);
+
     const factPaths = facts.map((fact) =>
       path.resolve(tmpDir, `${fact.name}.facts`)
     );
@@ -39,7 +41,6 @@ export default async function useSouffle(app: Express) {
               console.log(
                 `Removing files in temporary directory: ${tmpDir}...`
               );
-              await clear(tmpDir, [...factPaths, rulePath]);
               console.log(`Complete with error!`);
               res.json({
                 result: stderr,
@@ -64,10 +65,6 @@ export default async function useSouffle(app: Express) {
       await Promise.all(files.map((file) => fsPromise.readFile(file)))
     ).map((buffer) => buffer.toString());
 
-    // Delete tmp files
-    console.log(`Removing files in temporary directory: ${tmpDir}...`);
-    await clear(tmpDir, [...factPaths, ...files, rulePath]);
-
     console.log(`Complete!`);
     res.json({
       result: result[0] || "",
@@ -75,7 +72,14 @@ export default async function useSouffle(app: Express) {
   });
 }
 
-async function clear(tmpDir: string, files: string[]) {
-  // Delete tmp files
-  // await Promise.all([files.map((file) => fsPromise.rm(file))]);
+async function clear(tmpDir: string) {
+  const files = await fsPromise.readdir(tmpDir);
+  const promises = [];
+  for (const file of files) {
+    const ext = path.extname(file);
+    if (ext === ".csv" || ext === ".dl" || ext === ".facts") {
+      promises.push(fsPromise.rm(path.resolve(tmpDir, file)));
+    }
+  }
+  return Promise.all(promises);
 }
