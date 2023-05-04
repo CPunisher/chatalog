@@ -53,8 +53,10 @@ export async function generatePBE(csvs: string[], options: any, emit = true) {
       parser.write(content);
       parser.end();
     });
-    const resultTemplate = templateFn(pbe);
-    pbe.messages.push({ content: resultTemplate });
+    const resultTemplate = [templateFn(pbe)];
+    pbe.messages.push(
+      ...resultTemplate.flat(Infinity).map((t) => ({ content: t }))
+    );
     result.push(pbe);
 
     if (emit) {

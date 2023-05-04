@@ -17,7 +17,7 @@ export interface GroupedDatalogFiles {
   testResult?: TestResult[];
 }
 
-export type TemplateFunction = (args: any) => string;
+export type TemplateFunction = (args: any) => any;
 
 export interface TestResult {
   code: string;
