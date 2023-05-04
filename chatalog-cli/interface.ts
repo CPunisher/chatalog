@@ -17,10 +17,17 @@ export interface GroupedDatalogFiles {
   testResult?: TestResult[];
 }
 
-export type TemplateFunction = (args: GroupedDatalogFiles) => string;
+export type TemplateFunction = (args: any) => string;
 
 export interface TestResult {
   code: string;
   actual: string;
   pass: boolean;
+}
+
+export interface NormalFiles {
+  name: string;
+  examples: [string, string][];
+  messages: ConvMessage[];
+  testResult?: TestResult[];
 }
