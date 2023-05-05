@@ -6,15 +6,18 @@ import fs from "fs";
 import fsPromises from "fs/promises";
 import { GroupedDatalogFiles } from "../interface";
 
-const CommandTest = new Command("test");
-CommandTest.argument("<sources...>", "Test source JSON files");
-CommandTest.requiredOption(
+const CommandTestSouffle = new Command("test-souffle");
+CommandTestSouffle.argument("<sources...>", "Test source JSON files");
+CommandTestSouffle.requiredOption(
   "-r, --retries <retries>",
   "Max counts to retry in total",
   "5"
 );
-CommandTest.requiredOption("-t, --target <url>", "Souffle runner request url");
-CommandTest.action(test);
+CommandTestSouffle.requiredOption(
+  "-t, --target <url>",
+  "Souffle runner request url"
+);
+CommandTestSouffle.action(test);
 
 export async function test(sources: string[], options: any) {
   const { target, retries } = options;
@@ -124,4 +127,4 @@ function checkResult(expected: string, actual: string) {
   return true;
 }
 
-export default CommandTest;
+export default CommandTestSouffle;

@@ -5,7 +5,8 @@ import CommandReport from "./report";
 import CommandSendMessage from "./send-message";
 import CommandSendPBEMessage from "./send-pbe-message";
 import CommandFixMessage from "./fix-message";
-import CommandTest from "./test";
+import CommandTestSouffle from "./test-souffle";
+import CommandTestPBE from "./test-pbe";
 
 const program = new Command("chatalog");
 program.addCommand(CommandGenerteTemplate);
@@ -13,6 +14,7 @@ program.addCommand(CommandGeneratePBETemplate);
 program.addCommand(CommandSendMessage);
 program.addCommand(CommandSendPBEMessage);
 program.addCommand(CommandFixMessage);
-program.addCommand(CommandTest);
+program.addCommand(CommandTestSouffle);
+program.addCommand(CommandTestPBE);
 program.addCommand(CommandReport);
 program.parse();
