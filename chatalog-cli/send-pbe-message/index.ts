@@ -47,10 +47,7 @@ export async function sendMessage(sources: string[], options: any) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            message: [
-              template.messages[0].content,
-              template.messages[1].content,
-            ],
+            message: [template.messages[0].content],
           }),
         });
         const message = (await response.json()).message as string[];
