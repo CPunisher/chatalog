@@ -110,7 +110,7 @@ const Summary: FunctionalComponent = () => {
         </Collapse>
       </div>
       <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
-        <span>空代码: </span>
+        <span>空结果: </span>
         <span>{summaryData.emptyCase}</span>
         <Collapse>
           {summaryData.emptyList.map((e) => (

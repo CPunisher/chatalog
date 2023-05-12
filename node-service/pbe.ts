@@ -33,7 +33,9 @@ export default async function usePBE(app: Express) {
     const actual: [string, string][] = [];
     await new Promise<void>((resolve, reject) => {
       for (const input of inputs) {
-        shell.send(input);
+        if (!shell.stdin.closed) {
+          shell.send(input);
+        }
       }
       shell.on("message", function (message: string) {
         const arr = message.split("###");
@@ -45,10 +47,13 @@ export default async function usePBE(app: Express) {
         }
       });
       setTimeout(() => reject(), 5000);
-    }).catch(() => {
-      console.error("Reject", source);
-    });
-    shell.end(() => {});
+    })
+      .catch(() => {
+        console.error("Reject ", source);
+      })
+      .finally(() => {
+        shell.end(() => {});
+      });
     res.json({
       result: actual,
     });
