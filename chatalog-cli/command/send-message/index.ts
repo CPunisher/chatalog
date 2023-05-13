@@ -39,7 +39,7 @@ const CommandConversation = new Command("conversation")
         {
           retries: 5,
           onRetry: (error) => {
-            console.error(`Getting reply failed, retrying...`);
+            console.error(`Getting response failed, retrying...`);
             console.error(error);
           },
         }

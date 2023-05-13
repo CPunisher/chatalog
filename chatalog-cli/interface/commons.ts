@@ -5,8 +5,8 @@ export interface ConvMessage {
 
 export interface TestResult {
   code: string;
-  expected: string;
-  actual: string;
+  expected: string[];
+  actual: string[];
   pass: boolean;
 }
 
