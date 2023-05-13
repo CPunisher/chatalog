@@ -2,6 +2,7 @@ import { ChatMessage } from "chatgpt";
 import type { Express } from "express";
 import createHttpsProxyAgent from "https-proxy-agent";
 import nodeFetch from "node-fetch";
+import { ConvMessage } from "../chatalog-cli/interface/commons";
 
 interface ChatGPTAPIConfig {
   token: string;
@@ -41,23 +42,26 @@ export default async function useChatGPT(app: Express) {
 
   app.post("/message", async (req, res) => {
     try {
-      const isArray = Array.isArray(req.body.message);
-      const messages = isArray ? req.body.message : [req.body.message];
+      const isArray = Array.isArray(req.body.messages);
+      const messages: ConvMessage[] = isArray
+        ? req.body.messages
+        : [req.body.messages];
 
-      const answers: string[] = [];
+      const answers: ConvMessage[] = [];
       let lastMessage: ChatMessage | undefined;
       for (const message of messages) {
-        const response = await api.sendMessage(message, {
+        answers.push(message);
+        const response = await api.sendMessage(message.content, {
           timeoutMs: 5 * 60 * 1000,
           parentMessageId: lastMessage?.parentMessageId,
           conversationId: lastMessage?.conversationId,
         });
         console.log(response.parentMessageId, response.conversationId);
-        answers.push(response.text);
+        answers.push({ role: "system", content: response.text });
         lastMessage = response;
       }
       return res.json({
-        message: isArray ? answers : answers[0],
+        messages: answers,
       });
     } catch (e) {
       console.error(e);

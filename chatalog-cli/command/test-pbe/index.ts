@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import Progress from "../util/progress";
+import Progress from "../../util/progress";
 import retry from "async-retry";
 import nodeFetch from "node-fetch";
 import fs from "fs";
