@@ -1,4 +1,5 @@
-module.exports = function ({ facts, expected, rules }) {
+module.exports = function ({ data }) {
+  const { facts, expected, rules } = data;
   const lines = [];
   for (const fact of facts) {
     lines.push(`Here are facts of relation ${fact.name}:`);

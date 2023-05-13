@@ -1,4 +1,5 @@
-module.exports = function ({ examples }) {
+module.exports = function ({ data }) {
+  const { examples } = data;
   const lines = [];
   lines.push("The first column is input, and the second is output. Please generate a program by these examples.")
   for (const example of examples.slice(0, 50)) {
