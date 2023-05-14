@@ -4,12 +4,12 @@ import path from "path";
 import { Command } from "commander";
 import retry from "async-retry";
 import { ConversationOptions } from "./interface";
-import { Module } from "../../interface/commons";
-import { request } from "../../network";
+import { Module } from "@chatalog/interface/commons";
+import { request } from "@chatalog/network/";
 import {
   RequestConversation,
   ResponseConversation,
-} from "../../network/interface";
+} from "@chatalog/network/interface";
 
 const CommandConversation = new Command("conversation")
   .argument("<sources...>")

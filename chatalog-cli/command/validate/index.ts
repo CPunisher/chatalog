@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import retry from "async-retry";
 import { ValidateConfig, ValidateOptions } from "./interface";
-import { Module } from "../../interface/commons";
+import { Module } from "../../../chatalog/interface/commons";
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import path from "node:path";

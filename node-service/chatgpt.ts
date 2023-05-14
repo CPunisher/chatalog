@@ -2,7 +2,7 @@ import { ChatMessage } from "chatgpt";
 import type { Express } from "express";
 import createHttpsProxyAgent from "https-proxy-agent";
 import nodeFetch from "node-fetch";
-import { ConvMessage } from "../chatalog-cli/interface/commons";
+import { ConvMessage } from "../chatalog/interface/commons";
 
 interface ChatGPTAPIConfig {
   token: string;

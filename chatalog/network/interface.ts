@@ -1,6 +1,6 @@
-import { ConvMessage } from "../interface/commons";
-import { SouffleData } from "../interface/souffle";
-import { StringTransData } from "../interface/string-trans";
+import { ConvMessage } from "../../chatalog/interface/commons";
+import { SouffleData } from "../../chatalog/interface/souffle";
+import { StringTransData } from "../../chatalog/interface/string-trans";
 
 export interface RequestConversation {
   messages: ConvMessage[];

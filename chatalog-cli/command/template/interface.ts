@@ -1,4 +1,4 @@
-import { Module } from "../../interface/commons";
+import { Module } from "../../../chatalog/interface/commons";
 
 export type TemplateFunction<T> = (args: T) => string;
 

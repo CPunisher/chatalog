@@ -4,7 +4,7 @@ import MessageItem from "../components/MessageItem";
 import ReportContext from "../context";
 import classNames from "classnames";
 import useHighlightCode from "../hooks/useHighlightCode";
-import { TestResult } from "../../chatalog-cli/interface";
+import { TestResult } from "../../chatalog/interface";
 
 interface SingleResultProps {
   result: TestResult;

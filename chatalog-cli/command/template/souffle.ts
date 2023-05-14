@@ -1,5 +1,5 @@
-import { Module } from "../../interface/commons";
-import { SouffleData, SouffleFile } from "../../interface/souffle";
+import { Module } from "../../../chatalog/interface/commons";
+import { SouffleData, SouffleFile } from "../../../chatalog/interface/souffle";
 import { TemplateAction } from "./interface";
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";

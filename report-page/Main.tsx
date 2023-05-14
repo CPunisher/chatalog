@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { FunctionalComponent, VNode } from "preact";
 import { useCallback, useState } from "preact/hooks";
-import { GroupedDatalogFiles } from "../chatalog-cli/interface";
+import { GroupedDatalogFiles } from "../chatalog/interface";
 import ReportContext, { PageMode, ReportContextProps } from "./context";
 import Conversation from "./layout/Conversation";
 import File from "./layout/File";

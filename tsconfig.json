@@ -2,7 +2,8 @@
   "include": [
     "node-service/**/*",
     "chatalog-cli/**/*",
-    "report-page"
+    "chatalog/**/*",
+    "report-page",
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
@@ -17,6 +18,11 @@
     "lib": [
       "ES6"
     ],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@chatalog/*": [
+        "./chatalog/*"
+      ]
+    }
   }
 }

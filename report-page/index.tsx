@@ -1,5 +1,5 @@
 import { render } from "preact";
-import { GroupedDatalogFiles } from "../chatalog-cli/interface";
+import { GroupedDatalogFiles } from "../chatalog/interface";
 import Main from "./Main";
 import "./index.css";
 

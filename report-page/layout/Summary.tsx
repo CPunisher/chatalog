@@ -1,7 +1,7 @@
 import { FunctionalComponent, VNode } from "preact";
 import { useContext, useState } from "preact/hooks";
 import ReportContext from "../context";
-import { GroupedDatalogFiles } from "../../chatalog-cli/interface";
+import { GroupedDatalogFiles } from "../../chatalog/interface";
 import classNames from "classnames";
 
 interface SummaryData {

@@ -1,5 +1,5 @@
-import { Module, TestResult } from "../../interface/commons";
-import { ResponseValidate } from "../../network/interface";
+import { Module, TestResult } from "../../../chatalog/interface/commons";
+import { ResponseValidate } from "@chatalog/network/interface";
 
 export type ValidateType = "souffle" | "string-trans";
 

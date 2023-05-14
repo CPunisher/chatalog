@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { DatalogFile } from "../chatalog-cli/interface";
+import { DatalogFile } from "../chatalog/interface";
 import fsPromise from "fs/promises";
 import path from "path";
 import childProcess from "child_process";

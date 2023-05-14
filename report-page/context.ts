@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import { GroupedDatalogFiles } from "../chatalog-cli/interface";
+import { GroupedDatalogFiles } from "../chatalog/interface";
 
 export type PageMode = "item" | "test summary";
 export interface ReportContextProps {

@@ -1,5 +1,5 @@
-import { Module } from "../../interface/commons";
-import { StringTransData } from "../../interface/string-trans";
+import { Module } from "../../../chatalog/interface/commons";
+import { StringTransData } from "../../../chatalog/interface/string-trans";
 import { TemplateAction } from "./interface";
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";

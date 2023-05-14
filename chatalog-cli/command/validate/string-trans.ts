@@ -1,9 +1,9 @@
-import { StringTransData } from "../../interface/string-trans";
-import { request } from "../../network";
+import { StringTransData } from "../../../chatalog/interface/string-trans";
+import { request } from "@chatalog/network";
 import {
   RequestValidateStringTrans,
   ResponseValidate,
-} from "../../network/interface";
+} from "@chatalog/network/interface";
 import { ValidateConfig } from "./interface";
 
 const StringTrans: ValidateConfig<StringTransData> = {

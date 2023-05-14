@@ -1,9 +1,9 @@
-import { SouffleData } from "../../interface/souffle";
-import { request } from "../../network";
+import { SouffleData } from "../../../chatalog/interface/souffle";
+import { request } from "@chatalog/network";
 import {
   RequestValidateSouffle,
   ResponseValidate,
-} from "../../network/interface";
+} from "@chatalog/network/interface";
 import { ValidateConfig } from "./interface";
 
 const Souffle: ValidateConfig<SouffleData> = {
