@@ -3,7 +3,7 @@
     "node-service/**/*",
     "chatalog-cli/**/*",
     "chatalog/**/*",
-    "report-page",
+    "report-page/**/*",
   ],
   "compilerOptions": {
     "jsx": "react-jsx",

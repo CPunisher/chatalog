@@ -1,14 +1,15 @@
 import { createContext } from "preact";
-import { GroupedDatalogFiles } from "../chatalog/interface";
+import { Module, ModuleType } from "@chatalog/interface/commons";
 
 export type PageMode = "item" | "test summary";
-export interface ReportContextProps {
-  data: GroupedDatalogFiles[];
+export interface ReportContextProps<D> {
+  type: ModuleType;
+  data: Module<D>[];
   mode: PageMode;
-  current: GroupedDatalogFiles;
-  setCurrent: (newCurrent: GroupedDatalogFiles | PageMode) => void;
+  current: Module<D>;
+  setCurrent: (newCurrent: Module<D> | PageMode) => void;
 }
 
-const ReportContext = createContext<ReportContextProps | null>(null);
+const ReportContext = createContext<ReportContextProps<unknown> | null>(null);
 
 export default ReportContext;

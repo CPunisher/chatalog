@@ -1,17 +1,13 @@
-import { Command } from "commander";
-import { GroupedDatalogFiles } from "../interface";
+import { Command, Option } from "commander";
 import fsPromise from "fs/promises";
 import path from "path";
-
-const CommandReport = new Command("report");
-CommandReport.argument("<data...>");
-CommandReport.requiredOption("-o, --out <file>", "Output file");
-CommandReport.action(report);
+import { ReportOptions } from "./interface";
 
 const buildHtmlTemplate = (
   title: string,
   style: string,
   script: string,
+  type: string,
   data: string
 ) =>
   `
@@ -33,9 +29,10 @@ ${script}
     </script>
     <script>
       const data = ${data};
+      const type = ${type};
       const run = () => {
         const target = document.querySelector("main");
-        renderReports.default(target, data);
+        renderReports.default(target, type, data);
       }
       document.addEventListener('DOMContentLoaded', run);
     </script>
@@ -43,24 +40,37 @@ ${script}
   </html>
 `;
 
-export async function report(data: string[], options: any) {
-  const { out } = options;
-  const groupdFiles: GroupedDatalogFiles[] = await Promise.all(
-    data.map(async (s) => JSON.parse((await fsPromise.readFile(s)).toString()))
-  );
-  const [style, script] = await Promise.all([
-    // fsPromise.readFile(path.join(__dirname, "../../report-page/index.css")),
-    Promise.resolve(""),
-    fsPromise.readFile(path.join(__dirname, "../../report-page/index.js")),
-  ]);
-  const html = buildHtmlTemplate(
-    "Title",
-    style.toString(),
-    script.toString(),
-    JSON.stringify(groupdFiles)
-  );
+const CommandReport = new Command("report")
+  .argument("<data...>")
+  .addOption(
+    new Option("-t, --type <type>", "Template type").choices([
+      "souffle",
+      "string-trans",
+    ])
+  )
+  .option("-o, --outFile <outFile>", "Output file")
+  .action(async (data: string[], options: ReportOptions) => {
+    const { type, outFile } = options;
+    const dataList = await Promise.all(
+      data.map(async (s) =>
+        JSON.parse((await fsPromise.readFile(s)).toString())
+      )
+    );
+    const [style, script] = await Promise.all([
+      Promise.resolve(""),
+      fsPromise.readFile(
+        path.join(process.cwd(), "lib", "report-page", "index.js")
+      ),
+    ]);
+    const html = buildHtmlTemplate(
+      new Date().toISOString(),
+      style.toString(),
+      script.toString(),
+      JSON.stringify(type),
+      JSON.stringify(dataList)
+    );
 
-  await fsPromise.writeFile(out, html);
-}
+    await fsPromise.writeFile(outFile, html);
+  });
 
 export default CommandReport;

@@ -1,11 +1,9 @@
-import { Module } from "../../../chatalog/interface/commons";
+import { Module, ModuleType } from "../../../chatalog/interface/commons";
 
 export type TemplateFunction<T> = (args: T) => string;
 
-export type TemplateType = "souffle" | "string-trans";
-
 export interface TemplateOptions {
-  type: TemplateType;
+  type: ModuleType;
   template: string;
   outDir: string;
 }

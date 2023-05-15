@@ -1,10 +1,11 @@
-import { Module, TestResult } from "../../../chatalog/interface/commons";
-import { ResponseValidate } from "@chatalog/network/interface";
-
-export type ValidateType = "souffle" | "string-trans";
+import {
+  Module,
+  ModuleType,
+  TestResult,
+} from "../../../chatalog/interface/commons";
 
 export interface ValidateOptions {
-  type: ValidateType;
+  type: ModuleType;
   target: string;
   outDir: string;
 }

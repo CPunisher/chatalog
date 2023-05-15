@@ -1,23 +1,23 @@
-import { FunctionalComponent, VNode } from "preact";
+import { FunctionalComponent } from "preact";
 import { useContext, useState } from "preact/hooks";
 import ReportContext from "../context";
-import { GroupedDatalogFiles } from "../../chatalog/interface";
 import classNames from "classnames";
+import { Module } from "@chatalog/interface/commons";
 
 interface SummaryData {
   total: number;
   trueCase: number;
-  trueList: GroupedDatalogFiles[];
+  trueList: string[];
   // false case
   unexpectedCase: number;
-  unexpectedList: GroupedDatalogFiles[];
+  unexpectedList: string[];
   emptyCase: number;
-  emptyList: GroupedDatalogFiles[];
+  emptyList: string[];
   syntaxCase: number;
-  syntaxList: GroupedDatalogFiles[];
+  syntaxList: string[];
 }
 
-function summary(data: GroupedDatalogFiles[]): SummaryData {
+function summary(data: Module<unknown>[]): SummaryData {
   const summaryData: SummaryData = {
     total: data.length,
     trueCase: 0,
@@ -33,22 +33,22 @@ function summary(data: GroupedDatalogFiles[]): SummaryData {
 
   for (const entry of data) {
     const { testResult } = entry;
-    if (testResult?.some((r) => r.pass)) {
+    if (testResult.some((r) => r.pass)) {
       summaryData.trueCase++;
-      summaryData.trueList.push(entry);
+      summaryData.trueList.push(entry.name);
     } else {
       if (!testResult?.length) {
         // 空结果
         summaryData.emptyCase++;
-        summaryData.emptyList.push(entry);
+        summaryData.emptyList.push(entry.name);
       } else if (testResult.some((r) => !r.actual.includes("Error:"))) {
         // 存在一个不是语法错误的 false case
         summaryData.unexpectedCase++;
-        summaryData.unexpectedList.push(entry);
+        summaryData.unexpectedList.push(entry.name);
       } else if (testResult.some((r) => r.actual.includes("Error:"))) {
         // 语法错误
         summaryData.syntaxCase++;
-        summaryData.syntaxList.push(entry);
+        summaryData.syntaxList.push(entry.name);
       }
     }
   }
@@ -95,8 +95,8 @@ const Summary: FunctionalComponent = () => {
           {((summaryData.trueCase / summaryData.total) * 100).toFixed(2)}%
         </span>
         <Collapse>
-          {summaryData.trueList.map((e) => (
-            <li>{e.name}</li>
+          {summaryData.trueList.map((name) => (
+            <li>{name}</li>
           ))}
         </Collapse>
       </div>
@@ -104,8 +104,8 @@ const Summary: FunctionalComponent = () => {
         <span>运行结果不一致: </span>
         <span>{summaryData.unexpectedCase}</span>
         <Collapse>
-          {summaryData.unexpectedList.map((e) => (
-            <li>{e.name}</li>
+          {summaryData.unexpectedList.map((name) => (
+            <li>{name}</li>
           ))}
         </Collapse>
       </div>
@@ -113,8 +113,8 @@ const Summary: FunctionalComponent = () => {
         <span>空结果: </span>
         <span>{summaryData.emptyCase}</span>
         <Collapse>
-          {summaryData.emptyList.map((e) => (
-            <li>{e.name}</li>
+          {summaryData.emptyList.map((name) => (
+            <li>{name}</li>
           ))}
         </Collapse>
       </div>
@@ -122,8 +122,8 @@ const Summary: FunctionalComponent = () => {
         <span>语法错误: </span>
         <span>{summaryData.syntaxCase}</span>
         <Collapse>
-          {summaryData.syntaxList.map((e) => (
-            <li>{e.name}</li>
+          {summaryData.syntaxList.map((name) => (
+            <li>{name}</li>
           ))}
         </Collapse>
       </div>

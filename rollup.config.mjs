@@ -12,7 +12,7 @@ export default defineConfig({
   input: "report-page/index.tsx",
   output: {
     format: "iife",
-    file: "dist/report-page/index.js",
+    file: "lib/report-page/index.js",
     name: "renderReports",
     exports: "named",
     sourcemap: false,

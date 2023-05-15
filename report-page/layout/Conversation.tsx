@@ -1,18 +1,14 @@
 import classNames from "classnames";
 import { FunctionalComponent } from "preact";
-import { useContext, useEffect, useState } from "preact/hooks";
+import { useContext } from "preact/hooks";
 import ReportContext from "../context";
 import "highlight.js/styles/atom-one-dark.css";
 import MessageItem from "../components/MessageItem";
-import useHighlightCode from "../hooks/useHighlightCode";
+import { ConvMessage } from "@chatalog/interface/commons";
+import { useAutoHiglightCode } from "../hooks/useHighlightCode";
 
-interface MessageProps {
-  content: string;
-  role: "system" | "user";
-}
-
-const Message: FunctionalComponent<MessageProps> = ({ content, role }) => {
-  const htmlContent = useHighlightCode(content);
+const Message: FunctionalComponent<ConvMessage> = ({ content, role }) => {
+  const htmlContent = useAutoHiglightCode(content);
   return (
     <MessageItem className={classNames({ "bg-gray-50": role === "system" })}>
       <div dangerouslySetInnerHTML={{ __html: htmlContent }} />

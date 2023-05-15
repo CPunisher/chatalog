@@ -16,3 +16,5 @@ export interface Module<T> {
   testResult: TestResult[];
   data: T;
 }
+
+export type ModuleType = "souffle" | "string-trans";

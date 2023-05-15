@@ -11,13 +11,14 @@ function preElementSelector(): Test {
     node.tagName === "code";
 }
 
-const rehypeSouffle: unifiedTypes.Plugin<[], Element> = () => {
-  return (tree) =>
+function rehypeLanguage(language: string): unifiedTypes.Plugin<[], Element> {
+  return () => (tree) => {
     visit<Element, Test>(tree, preElementSelector(), function (node) {
       if ("properties" in node && node.properties) {
-        node.properties.className = ["language-souffle"];
+        node.properties.className = [`language-${language}`];
       }
     });
-};
+  };
+}
 
-export default rehypeSouffle;
+export default rehypeLanguage;

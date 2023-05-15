@@ -11,7 +11,7 @@
     "node-service": "tsx node-service/index.ts",
     "cli": "tsx chatalog-cli/index.ts",
     "dev:report": "rollup -w -c ./rollup.config.dev.mjs",
-    "build": "rimraf ./dist && tsc && rollup -c"
+    "build:report": "rimraf ./lib && rollup -c"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.1",
