@@ -44,7 +44,7 @@ const Main: FunctionalComponent = () => {
   return (
     <div class="overflow-hidden w-full h-full">
       <Sidebar />
-      <div class="pl-[260px]">
+      <div class="pl-[160px] lg:pl-[260px]">
         {mode === "item" && (
           <Tabs
             tabs={{

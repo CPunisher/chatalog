@@ -21,7 +21,7 @@ const Sidebar: FunctionalComponent = () => {
   );
 
   return (
-    <div class="dark overflow-auto bg-zinc-800 p-2 space-y-1 fixed inset-y-0 flex w-[260px] flex-col">
+    <div class="dark overflow-auto bg-zinc-800 p-2 space-y-1 fixed inset-y-0 flex w-[160px] flex-col lg:w-[260px]">
       <div class="flex flex-col h-full space-y-1 text-gray-100 text-sm">
         <div className="flex items-center pb-2">
           <input
