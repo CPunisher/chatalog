@@ -2,7 +2,6 @@ node_modules
 *.log
 dist
 lib
-output/*
-!output/*.html
+output
 .vscode/launch.json
 .vscode/tasks.json
