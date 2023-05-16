@@ -31,6 +31,8 @@ function summary(data: Module<unknown>[]): SummaryData {
     syntaxList: [],
   };
 
+  const isError = (out: string[]) =>
+    ["Error:", "Traceback"].some((p) => out.some((o) => o.includes(p)));
   for (const entry of data) {
     const { testResult } = entry;
     if (testResult.some((r) => r.pass)) {
@@ -41,11 +43,11 @@ function summary(data: Module<unknown>[]): SummaryData {
         // 空结果
         summaryData.emptyCase++;
         summaryData.emptyList.push(entry.name);
-      } else if (testResult.some((r) => !r.actual.includes("Error:"))) {
+      } else if (testResult.some((r) => !isError(r.actual))) {
         // 存在一个不是语法错误的 false case
         summaryData.unexpectedCase++;
         summaryData.unexpectedList.push(entry.name);
-      } else if (testResult.some((r) => r.actual.includes("Error:"))) {
+      } else if (testResult.some((r) => isError(r.actual))) {
         // 语法错误
         summaryData.syntaxCase++;
         summaryData.syntaxList.push(entry.name);
