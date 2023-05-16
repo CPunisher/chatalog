@@ -24,11 +24,11 @@ const Souffle: ValidateConfig<SouffleData> = {
     }
     return codes;
   },
-  doValidate: async (target, code, module) => {
+  doValidate: async (url, code, module) => {
     const { result: actual } = await request<
       RequestValidateSouffle,
       ResponseValidate<string[]>
-    >(target, {
+    >(url, {
       code,
       data: module.data,
     });

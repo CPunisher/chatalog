@@ -1,58 +1,50 @@
 import type { Express } from "express";
-import { DatalogFile } from "../chatalog/interface";
+import { v4 as uuidv4 } from "uuid";
+import fs from "fs";
 import fsPromise from "fs/promises";
 import path from "path";
 import childProcess from "child_process";
-
-type PartialFile = Pick<DatalogFile, "name" | "content">;
-
-interface Params {
-  facts: PartialFile[];
-  rule: PartialFile;
-}
+import { RequestValidateSouffle } from "@chatalog/network/interface";
 
 export default async function useSouffle(app: Express) {
   app.post("/souffle", async (req, res) => {
-    const { facts, rule } = req.body as Params;
-    const tmpDir = "/tmp";
-    await clear(tmpDir);
+    const { code, data } = req.body as RequestValidateSouffle;
+    const tmpDir = path.join("/tmp", uuidv4());
+    fs.mkdirSync(tmpDir);
 
-    const factPaths = facts.map((fact) =>
+    const factPaths = data.facts.map((fact) =>
       path.resolve(tmpDir, `${fact.name}.facts`)
     );
-    const rulePath = path.resolve(tmpDir, `${rule.name}.dl`);
+    const rulePath = path.resolve(tmpDir, `${data.rules[0].name}.dl`);
     // Write facts and rule to tmp file
     console.log(`Writing to temporary directory: ${tmpDir}...`);
     await Promise.all([
-      ...facts.map((fact, i) =>
+      ...data.facts.map((fact, i) =>
         fsPromise.writeFile(factPaths[i], fact.content)
       ),
-      fsPromise.writeFile(rulePath, rule.content),
+      fsPromise.writeFile(rulePath, code),
     ]);
     // Run souffle, return output relation
     console.log("Running souffle for results...");
-    try {
-      await new Promise<void>((resolve, reject) => {
-        childProcess.exec(
-          `souffle -F ${tmpDir} -D ${tmpDir} ${rulePath}`,
-          async (error, _, stderr) => {
-            if (error) {
-              // Delete tmp files
-              console.log(
-                `Removing files in temporary directory: ${tmpDir}...`
-              );
-              console.log(`Complete with error!`);
-              res.json({
-                result: stderr,
-              });
-              reject(error);
-              return;
-            }
-            resolve();
+    const error = await new Promise<string | null>((resolve, reject) => {
+      childProcess.exec(
+        `souffle -F ${tmpDir} -D ${tmpDir} ${rulePath}`,
+        async (error, _, stderr) => {
+          if (error) {
+            reject(stderr);
           }
-        );
+          resolve(null);
+        }
+      );
+    }).catch((err) => err);
+
+    if (error) {
+      // Delete tmp files
+      await fsPromise.rm(tmpDir, { recursive: true, force: true });
+      console.log(`Error: ${error}`);
+      res.json({
+        result: [error],
       });
-    } catch {
       return;
     }
 
@@ -65,21 +57,9 @@ export default async function useSouffle(app: Express) {
       await Promise.all(files.map((file) => fsPromise.readFile(file)))
     ).map((buffer) => buffer.toString());
 
-    console.log(`Complete!`);
+    await fsPromise.rm(tmpDir, { recursive: true, force: true });
     res.json({
-      result: result[0] || "",
+      result: result,
     });
   });
-}
-
-async function clear(tmpDir: string) {
-  const files = await fsPromise.readdir(tmpDir);
-  const promises = [];
-  for (const file of files) {
-    const ext = path.extname(file);
-    if (ext === ".csv" || ext === ".dl" || ext === ".facts") {
-      promises.push(fsPromise.rm(path.resolve(tmpDir, file)));
-    }
-  }
-  return Promise.all(promises);
 }

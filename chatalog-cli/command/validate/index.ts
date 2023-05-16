@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import retry from "async-retry";
 import { ValidateConfig, ValidateOptions } from "./interface";
 import { Module } from "../../../chatalog/interface/commons";
@@ -10,10 +10,16 @@ import StringTrans from "./string-trans";
 
 const CommandValidate = new Command("validate")
   .argument("<sources...>", "Validate source JSON files")
-  .option("-t, --target <url>", "Runner request url")
+  .addOption(
+    new Option("-t, --type <type>", "Template type").choices([
+      "souffle",
+      "string-trans",
+    ])
+  )
+  .option("-u, --url <url>", "Runner request url")
   .option("-o, --outDir <dir>", "Output directory")
   .action(async (sources: string[], options: ValidateOptions) => {
-    const { type, target, outDir } = options;
+    const { type, url, outDir } = options;
     let validateConfig: ValidateConfig<unknown>;
     switch (type) {
       case "souffle":
@@ -45,25 +51,10 @@ const CommandValidate = new Command("validate")
       );
 
       for (const code of codes) {
-        await retry(
-          async () => {
-            const result = await validateConfig.doValidate(
-              target,
-              code,
-              module
-            );
-            if (result) {
-              module.testResult.push(result);
-            }
-          },
-          {
-            retries: 5,
-            onRetry: (error) => {
-              console.error(`Getting response failed, retrying...`);
-              console.error(error);
-            },
-          }
-        );
+        const result = await validateConfig.doValidate(url, code, module);
+        if (result) {
+          module.testResult.push(result);
+        }
       }
 
       if (!fs.existsSync(outDir)) {

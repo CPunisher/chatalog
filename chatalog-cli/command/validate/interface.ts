@@ -6,14 +6,14 @@ import {
 
 export interface ValidateOptions {
   type: ModuleType;
-  target: string;
+  url: string;
   outDir: string;
 }
 
 export interface ValidateConfig<D> {
   codeExtractor: (messages: string[]) => string[];
   doValidate: (
-    target: string,
+    url: string,
     code: string,
     module: Module<D>
   ) => Promise<TestResult | null>;
