@@ -32,7 +32,7 @@ ${script}
       const type = ${type};
       const run = () => {
         const target = document.querySelector("main");
-        renderReports.default(target, type, data);
+        renderReports(target, type, data);
       }
       document.addEventListener('DOMContentLoaded', run);
     </script>
@@ -57,7 +57,9 @@ const CommandReport = new Command("report")
       )
     );
     const [style, script] = await Promise.all([
-      Promise.resolve(""),
+      fsPromise.readFile(
+        path.join(process.cwd(), "lib", "report-page", "style.css")
+      ),
       fsPromise.readFile(
         path.join(process.cwd(), "lib", "report-page", "index.js")
       ),
