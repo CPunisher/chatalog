@@ -33,7 +33,6 @@ const Result: FunctionalComponent = () => {
           <SingleResult result={result} />
         </MessageItem>
       ))}
-      <div class="w-full h-32 md:h-48" />
     </div>
   );
 };

@@ -31,7 +31,6 @@ const Conversation: FunctionalComponent = () => {
           role={index % 2 ? "system" : "user"}
         />
       ))}
-      <div class="w-full h-32 md:h-48" />
     </div>
   );
 };

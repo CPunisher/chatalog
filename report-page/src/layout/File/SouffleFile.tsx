@@ -36,7 +36,6 @@ const SouffleFile: FunctionalComponent = () => {
           {content}
         </MessageItem>
       ))}
-      <div class="w-full h-32 md:h-48" />
     </div>
   );
 };

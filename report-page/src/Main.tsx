@@ -33,7 +33,7 @@ const Tabs: FunctionalComponent<TabsProps> = ({ tabs, tab, setTab }) => {
           ))}
         </div>
       </div>
-      {tabs[tab].content}
+      <div class="w-full h-[calc(100%-2.5rem)]">{tabs[tab].content}</div>
     </>
   );
 };
@@ -44,7 +44,7 @@ const Main: FunctionalComponent = () => {
   return (
     <div class="overflow-hidden w-full h-full">
       <Sidebar />
-      <div class="pl-[160px] lg:pl-[260px]">
+      <div class="h-full pl-[160px] lg:pl-[260px]">
         {mode === "item" && (
           <Tabs
             tabs={{
