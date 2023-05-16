@@ -1,7 +1,7 @@
 import express from "express";
 import useChatGPT from "./chatgpt";
 import useSouffle from "./souffle";
-import usePBE from "./pbe";
+import useStringTrans from "./string-trans";
 
 const app = express();
 app.use(express.json());
@@ -15,7 +15,7 @@ async function main() {
   console.log(`Starting Chatalog node service`);
   await useChatGPT(app);
   useSouffle(app);
-  usePBE(app);
+  useStringTrans(app);
 
   const PORT = Number(process.env.PORT) || 4000;
   const HOST = process.env.HOST || "0.0.0.0";
