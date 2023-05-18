@@ -13,7 +13,23 @@ const SingleResult: FunctionalComponent<{ result: TestResult }> = ({
   return (
     <>
       <span dangerouslySetInnerHTML={{ __html: htmlContent }} />
-      {result.actual}
+      {result.actual
+        .map((actual) => actual.split("###"))
+        .map(([input, output], index) => {
+          const expected = result.expected[index];
+          if (expected === output) {
+            return (
+              <div>
+                {input}, {output}, {expected}
+              </div>
+            );
+          }
+          return (
+            <div class="text-red-600">
+              {input}, {output}, {expected}
+            </div>
+          );
+        })}
       {result.pass.toString()}
     </>
   );
