@@ -21,8 +21,6 @@ export default async function useStringTrans(app: Express) {
     const inputs = data.examples.map(([input, _]) => input);
     const actual: [string, string][] = [];
     for (const input of inputs) {
-      console.log(`Test for input: ${input}`);
-
       const wrappedCode = generatePython(caller, code, input);
       const tmpFile = path.join("/tmp", `${uuidv4()}.py`);
       await fsPromise.writeFile(tmpFile, wrappedCode);
@@ -33,8 +31,6 @@ export default async function useStringTrans(app: Express) {
       const output = proc.stdout.toString() || proc.stderr.toString();
       actual.push([input, output]);
       await fsPromise.rm(tmpFile);
-
-      console.log(`Test for input: ${input}, output: ${output}`);
     }
     const respBody: ResponseValidate<[string, string][]> = {
       result: actual,

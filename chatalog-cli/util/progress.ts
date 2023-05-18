@@ -1,17 +1,11 @@
-export default class Progress {
-  private current: number;
-  private total: number;
+import cliProgress from "cli-progress";
 
-  constructor(total: number, current = 0) {
-    this.current = current;
-    this.total = total;
-  }
+const createBar = (total: number) => {
+  const bar = new cliProgress.SingleBar({
+    format: "{bar} | {filename} | {value}/{total}",
+  });
+  bar.start(total, 0);
+  return bar;
+};
 
-  plus() {
-    this.current++;
-  }
-
-  log(message?: any) {
-    console.log(`[${this.current}/${this.total}] ${message}`);
-  }
-}
+export { createBar };

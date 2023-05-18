@@ -10,14 +10,18 @@ import {
   RequestConversation,
   ResponseConversation,
 } from "@chatalog/network/interface";
+import { createBar } from "../../util/progress";
 
 const CommandConversation = new Command("conversation")
   .argument("<sources...>")
   .option("-o, --outDir <dir>", "Output directory")
   .option("-t, --target <url>", "Request url")
   .action(async (sources: string[], options: ConversationOptions) => {
+    const startTime = Date.now();
+    const bar = createBar(sources.length);
     const { outDir, target } = options;
     for (const source of sources) {
+      bar.increment(1, { filename: path.basename(source) });
       if (!fs.existsSync(source)) {
         console.error(`${source} doesn't exist`);
         continue;
@@ -51,6 +55,13 @@ const CommandConversation = new Command("conversation")
       const outFilePath = path.resolve(outDir, path.basename(source));
       fsPromises.writeFile(outFilePath, JSON.stringify(module, null, 2));
     }
+    bar.stop();
+    const usedTime = Date.now() - startTime;
+    console.log(
+      `Finish ${sources.length} tasks in ${usedTime} ms, avg: ${(
+        usedTime / sources.length
+      ).toFixed(3)}`
+    );
   });
 
 export { CommandConversation };

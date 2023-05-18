@@ -45,7 +45,7 @@ const StringTrans: ValidateConfig<StringTransData> = {
     return {
       code: "```\n" + code + "\n```",
       expected: module.data.examples.map((r) => r[1]),
-      actual: result.map((r) => r[1]),
+      actual: result.map((r) => `${r[0]}, ${r[1]}`),
       pass,
     };
   },
