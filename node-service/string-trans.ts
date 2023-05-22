@@ -10,7 +10,7 @@ import {
 
 function generatePython(functionName: string, source: string, input: string) {
   const result = `${source}
-print(${functionName}("${input.replace(/\"/gm, '\\"')}"))
+print(${functionName}("${input.replace(/\"/gm, '\\"')}"), end='')
 `;
   return result;
 }
@@ -23,9 +23,10 @@ export default async function useStringTrans(app: Express) {
     for (const input of inputs) {
       const wrappedCode = generatePython(caller, code, input);
       const tmpFile = path.join("/tmp", `${uuidv4()}.py`);
+      console.log(tmpFile);
       await fsPromise.writeFile(tmpFile, wrappedCode);
 
-      const proc = child_process.spawnSync("python", [tmpFile], {
+      const proc = child_process.spawnSync("python3", [tmpFile], {
         timeout: 5000,
       });
       const output = proc.stdout.toString() || proc.stderr.toString();

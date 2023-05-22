@@ -3,6 +3,7 @@ import { useContext, useState } from "preact/hooks";
 import ReportContext from "../context";
 import classNames from "classnames";
 import { Module } from "@chatalog/interface/commons";
+import { ValidationResult, singleValidate } from "../utils/validator";
 
 interface SummaryData {
   total: number;
@@ -31,26 +32,31 @@ function summary(data: Module<unknown>[]): SummaryData {
     syntaxList: [],
   };
 
-  const isError = (out: string[]) =>
-    ["Error:", "Traceback"].some((p) => out.some((o) => o.includes(p)));
   for (const entry of data) {
-    const { testResult } = entry;
-    if (testResult.some((r) => r.pass)) {
-      summaryData.trueCase++;
-      summaryData.trueList.push(entry.name);
-    } else {
-      if (!testResult?.length) {
+    const validationResult = singleValidate(entry);
+    switch (validationResult) {
+      case ValidationResult.PASS: {
+        summaryData.trueCase++;
+        summaryData.trueList.push(entry.name);
+        break;
+      }
+      case ValidationResult.EMPTY_ERROR: {
         // 空结果
         summaryData.emptyCase++;
         summaryData.emptyList.push(entry.name);
-      } else if (testResult.some((r) => !isError(r.actual))) {
+        break;
+      }
+      case ValidationResult.WRONG_ERROR: {
         // 存在一个不是语法错误的 false case
         summaryData.unexpectedCase++;
         summaryData.unexpectedList.push(entry.name);
-      } else if (testResult.some((r) => isError(r.actual))) {
+        break;
+      }
+      case ValidationResult.SYNTAX_ERROR: {
         // 语法错误
         summaryData.syntaxCase++;
         summaryData.syntaxList.push(entry.name);
+        break;
       }
     }
   }

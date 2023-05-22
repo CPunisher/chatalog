@@ -2,6 +2,7 @@ import { FunctionalComponent } from "preact";
 import { useContext, useMemo, useState } from "preact/hooks";
 import ReportContext from "../context";
 import classNames from "classnames";
+import { ValidationResult, singleValidate } from "../utils/validator";
 
 const Sidebar: FunctionalComponent = () => {
   const {
@@ -32,19 +33,31 @@ const Sidebar: FunctionalComponent = () => {
           />
         </div>
         <div class="flex flex-col flex-1 overflow-y-auto gap-2 pt-2 border-b border-t border-white/20">
-          {searchFiltered.map((group) => (
+          {searchFiltered.map((module) => (
             <a
               class={classNames(
                 "flex py-3 px-3 items-center gap-3 rounded-md cursor-pointer break-all hover:bg-zinc-700",
-                { "bg-zinc-700": mode === "item" && group === current }
+                {
+                  "text-green-500":
+                    singleValidate(module) === ValidationResult.PASS,
+                },
+                {
+                  "text-red-600":
+                    singleValidate(module) === ValidationResult.WRONG_ERROR,
+                },
+                {
+                  "text-orange-500":
+                    singleValidate(module) === ValidationResult.SYNTAX_ERROR,
+                },
+                { "bg-zinc-700": mode === "item" && module === current }
               )}
               onClick={() => {
-                setCurrent?.(group);
+                setCurrent?.(module);
                 window.scrollTo(0, 0);
               }}
             >
               <div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">
-                {group.name ?? "Unknown"}
+                {module.name ?? "Unknown"}
               </div>
             </a>
           ))}

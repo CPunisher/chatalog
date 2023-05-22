@@ -26,7 +26,11 @@ const SingleResult: FunctionalComponent<{ result: TestResult }> = ({
           }
           return (
             <div class="text-red-600">
-              {input}, {output}, {expected}
+              <span>{input}</span>
+              <span>{"\t"}</span>
+              <span>{output || "「空」"}</span>
+              <span>{"\t"}</span>
+              <span>{expected}</span>
             </div>
           );
         })}

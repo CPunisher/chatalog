@@ -14,7 +14,7 @@ const StringTrans: ValidateConfig<StringTransData> = {
       const matches = [...message.matchAll(PATTERN)];
       for (let i = 0; i < matches.length; i += 2) {
         const match = matches[i];
-        if (match.index) {
+        if (match.index !== undefined) {
           const next = matches[i + 1]?.index ?? message.length;
           const code = message.substring(
             match.index + match[0].length,
