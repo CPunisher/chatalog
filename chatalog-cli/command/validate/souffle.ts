@@ -34,15 +34,16 @@ const Souffle: ValidateConfig<SouffleData> = {
     });
 
     const expected = module.data.expected.map((e) => e.content);
-    const pass =
-      expected.length === actual.length &&
-      actual.every((_, index) => checkResult(expected[index], actual[index]));
+    const passArr = actual.map((_, index) =>
+      checkResult(expected[index], actual[index])
+    );
 
     return {
       code: "```\n" + code + "\n```",
       expected,
       actual,
-      pass,
+      passId: passArr.filter((v) => v).map((_, index) => index),
+      pass: expected.length === actual.length && passArr.every((v) => v),
     };
   },
 };

@@ -39,15 +39,15 @@ const Sidebar: FunctionalComponent = () => {
                 "flex py-3 px-3 items-center gap-3 rounded-md cursor-pointer break-all hover:bg-zinc-700",
                 {
                   "text-green-500":
-                    singleValidate(module) === ValidationResult.PASS,
+                    singleValidate(module)[0] === ValidationResult.PASS,
                 },
                 {
                   "text-red-600":
-                    singleValidate(module) === ValidationResult.WRONG_ERROR,
+                    singleValidate(module)[0] === ValidationResult.WRONG_ERROR,
                 },
                 {
                   "text-orange-500":
-                    singleValidate(module) === ValidationResult.SYNTAX_ERROR,
+                    singleValidate(module)[0] === ValidationResult.SYNTAX_ERROR,
                 },
                 { "bg-zinc-700": mode === "item" && module === current }
               )}

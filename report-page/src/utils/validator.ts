@@ -11,15 +11,29 @@ function isError(out: string[]) {
   return ["Error:", "Traceback"].some((p) => out.some((o) => o.includes(p)));
 }
 
-export function singleValidate(entry: Module<unknown>): ValidationResult {
+export function singleValidate(
+  entry: Module<unknown>
+): [ValidationResult, number] {
   const { testResult } = entry;
-  if (testResult.some((r) => r.pass)) return ValidationResult.PASS;
+  // 存在 pass
+  if (testResult.some((r) => r.pass)) return [ValidationResult.PASS, 1];
   else {
-    if (!testResult.length) return ValidationResult.EMPTY_ERROR;
-    if (testResult.some((r) => !isError(r.actual)))
-      return ValidationResult.WRONG_ERROR;
-    if (testResult.some((r) => isError(r.actual)))
-      return ValidationResult.SYNTAX_ERROR;
+    // 空结果
+    if (!testResult.length) return [ValidationResult.EMPTY_ERROR, 0];
+
+    // 取最大正确率
+    const [max, maxIndex] = testResult.reduce(
+      ([prevMax, prevIndex], current, currentIndex) => {
+        const r = current.passId.length / current.expected.length;
+        if (r > prevIndex) return [r, currentIndex];
+        return [prevMax, prevIndex];
+      },
+      [0, -1]
+    );
+
+    if (!isError(testResult[maxIndex].actual)) {
+      return [ValidationResult.WRONG_ERROR, max];
+    }
+    return [ValidationResult.SYNTAX_ERROR, max];
   }
-  throw new Error("unreachable");
 }

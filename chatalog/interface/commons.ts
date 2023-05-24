@@ -7,6 +7,7 @@ export interface TestResult {
   code: string;
   expected: string[];
   actual: string[];
+  passId: number[];
   pass: boolean;
 }
 

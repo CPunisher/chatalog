@@ -1,4 +1,4 @@
-import { FunctionalComponent } from "preact";
+import { FunctionComponent, FunctionalComponent } from "preact";
 import { useContext, useState } from "preact/hooks";
 import ReportContext from "../context";
 import classNames from "classnames";
@@ -11,11 +11,11 @@ interface SummaryData {
   trueList: string[];
   // false case
   unexpectedCase: number;
-  unexpectedList: string[];
+  unexpectedList: [string, number][];
+  syntaxCase: number;
+  syntaxList: [string, number][];
   emptyCase: number;
   emptyList: string[];
-  syntaxCase: number;
-  syntaxList: string[];
 }
 
 function summary(data: Module<unknown>[]): SummaryData {
@@ -26,14 +26,14 @@ function summary(data: Module<unknown>[]): SummaryData {
 
     unexpectedCase: 0,
     unexpectedList: [],
-    emptyCase: 0,
-    emptyList: [],
     syntaxCase: 0,
     syntaxList: [],
+    emptyCase: 0,
+    emptyList: [],
   };
 
   for (const entry of data) {
-    const validationResult = singleValidate(entry);
+    const [validationResult, accuracy] = singleValidate(entry);
     switch (validationResult) {
       case ValidationResult.PASS: {
         summaryData.trueCase++;
@@ -49,13 +49,13 @@ function summary(data: Module<unknown>[]): SummaryData {
       case ValidationResult.WRONG_ERROR: {
         // 存在一个不是语法错误的 false case
         summaryData.unexpectedCase++;
-        summaryData.unexpectedList.push(entry.name);
+        summaryData.unexpectedList.push([entry.name, accuracy]);
         break;
       }
       case ValidationResult.SYNTAX_ERROR: {
         // 语法错误
         summaryData.syntaxCase++;
-        summaryData.syntaxList.push(entry.name);
+        summaryData.syntaxList.push([entry.name, accuracy]);
         break;
       }
     }
@@ -85,6 +85,31 @@ const Collapse: FunctionalComponent<CollapseProps> = ({
   );
 };
 
+const SummaryTable: FunctionComponent<{
+  entries: [string, number][];
+}> = ({ entries }) => {
+  return (
+    <table class="block box-border my-3 w-full overflow-auto">
+      <thead class="w-full">
+        <tr>
+          <th class="text-left px-3 py-2 border border-gray-300">测试用例</th>
+          <th class="text-left px-3 py-2 border border-gray-300">用例正确率</th>
+        </tr>
+      </thead>
+      <tbody>
+        {entries.map(([data, accuracy]) => (
+          <tr class="odd:bg-gray-50">
+            <td class="px-3 py-2 border border-gray-300">{data}</td>
+            <td class="px-3 py-2 border border-gray-300">
+              {(accuracy * 100).toFixed(3)}%
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
 const Summary: FunctionalComponent = () => {
   const { data } = useContext(ReportContext) || {};
   const summaryData = summary(data ?? []);
@@ -103,36 +128,32 @@ const Summary: FunctionalComponent = () => {
           {((summaryData.trueCase / summaryData.total) * 100).toFixed(2)}%
         </span>
         <Collapse>
-          {summaryData.trueList.map((name) => (
-            <li>{name}</li>
-          ))}
+          <SummaryTable
+            entries={summaryData.trueList.map((entry) => [entry, 1])}
+          />
         </Collapse>
       </div>
       <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
         <span>运行结果不一致: </span>
         <span>{summaryData.unexpectedCase}</span>
         <Collapse>
-          {summaryData.unexpectedList.map((name) => (
-            <li>{name}</li>
-          ))}
+          <SummaryTable entries={summaryData.unexpectedList} />
         </Collapse>
       </div>
       <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
         <span>空结果: </span>
         <span>{summaryData.emptyCase}</span>
         <Collapse>
-          {summaryData.emptyList.map((name) => (
-            <li>{name}</li>
-          ))}
+          <SummaryTable
+            entries={summaryData.emptyList.map((entry) => [entry, 0])}
+          />
         </Collapse>
       </div>
       <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
         <span>语法错误: </span>
         <span>{summaryData.syntaxCase}</span>
         <Collapse>
-          {summaryData.syntaxList.map((name) => (
-            <li>{name}</li>
-          ))}
+          <SummaryTable entries={summaryData.syntaxList} />
         </Collapse>
       </div>
     </div>

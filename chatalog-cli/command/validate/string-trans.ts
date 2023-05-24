@@ -41,24 +41,26 @@ const StringTrans: ValidateConfig<StringTransData> = {
       data: module.data,
     });
 
-    const pass = checkResult(module.data.examples, result);
+    const passId = checkResult(module.data.examples, result);
     return {
       code: "```\n" + code + "\n```",
       expected: module.data.examples.map((r) => r[1]),
       actual: result.map((r) => `${r[0]}###${r[1]}`),
-      pass,
+      passId,
+      pass: passId.length === module.data.examples.length,
     };
   },
 };
 
 function checkResult(examples: [string, string][], result: [string, string][]) {
-  for (const [input, output] of result) {
+  const passId: number[] = [];
+  for (const [index, [input, output]] of result.entries()) {
     const truth = examples.find((pair) => pair[0] === input)?.[1];
-    if (truth !== output) {
-      return false;
+    if (truth === output) {
+      passId.push(index);
     }
   }
-  return true;
+  return passId;
 }
 
 export default StringTrans;
