@@ -49,7 +49,7 @@ const CommandValidate = new Command("validate")
       );
 
       const codes = validateConfig.codeExtractor(
-        module.messages
+        (module.messages ?? [])
           .filter((msg) => msg.role === "system")
           .map((msg) => msg.content)
       );

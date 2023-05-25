@@ -35,7 +35,7 @@ const Souffle: ValidateConfig<SouffleData> = {
 
     const expected = module.data.expected.map((e) => e.content);
     const passArr = actual.map((_, index) =>
-      checkResult(expected[index], actual[index])
+      expected[index] ? checkResult(expected[index], actual[index]) : false
     );
 
     return {

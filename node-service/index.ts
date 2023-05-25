@@ -4,7 +4,7 @@ import useSouffle from "./souffle";
 import useStringTrans from "./string-trans";
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "2mb" }));
 app.get("/", async (_, res) => {
   return res.json({
     message: "Hello Chatalog 👋",
