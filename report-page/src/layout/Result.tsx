@@ -5,6 +5,7 @@ import ReportContext from "../context";
 import classNames from "classnames";
 import { TestResult } from "@chatalog/interface/commons";
 import { useAutoHiglightCode } from "../hooks/useHighlightCode";
+import { useParams } from "react-router-dom";
 
 const SingleResult: FunctionalComponent<{ result: TestResult }> = ({
   result,
@@ -48,7 +49,9 @@ const SingleResult: FunctionalComponent<{ result: TestResult }> = ({
 };
 
 const Result: FunctionalComponent = () => {
-  const { current } = useContext(ReportContext) || {};
+  const { id = "0" } = useParams();
+  const { data } = useContext(ReportContext) || {};
+  const current = data?.[parseInt(id)];
 
   if (!current) {
     return null;

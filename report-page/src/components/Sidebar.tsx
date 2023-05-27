@@ -3,14 +3,10 @@ import { useContext, useMemo, useState } from "preact/hooks";
 import ReportContext from "../context";
 import classNames from "classnames";
 import { ValidationResult, singleValidate } from "../utils/validator";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Sidebar: FunctionalComponent = () => {
-  const {
-    data = [],
-    mode,
-    current,
-    setCurrent,
-  } = useContext(ReportContext) || {};
+  const { data = [] } = useContext(ReportContext) || {};
   const [searchInput, setSearchInput] = useState("");
 
   const searchFiltered = useMemo(
@@ -20,6 +16,12 @@ const Sidebar: FunctionalComponent = () => {
       ),
     [data, searchInput]
   );
+
+  const location = useLocation();
+  const nested = useMemo(() => {
+    if (location.pathname.split("/").length <= 2) return "";
+    return location.pathname.substring(location.pathname.lastIndexOf("/"));
+  }, [location]);
 
   return (
     <div class="dark overflow-auto bg-zinc-800 p-2 space-y-1 fixed inset-y-0 flex w-[160px] flex-col lg:w-[260px]">
@@ -33,52 +35,51 @@ const Sidebar: FunctionalComponent = () => {
           />
         </div>
         <div class="flex flex-col flex-1 overflow-y-auto gap-2 pt-2 border-b border-t border-white/20">
-          {searchFiltered.map((module) => (
-            <a
-              class={classNames(
-                "flex py-3 px-3 items-center gap-3 rounded-md cursor-pointer break-all hover:bg-zinc-700",
-                {
-                  "text-green-500":
-                    singleValidate(module)[0] === ValidationResult.PASS,
-                },
-                {
-                  "text-red-600":
-                    singleValidate(module)[0] === ValidationResult.WRONG_ERROR,
-                },
-                {
-                  "text-orange-500":
-                    singleValidate(module)[0] === ValidationResult.SYNTAX_ERROR,
-                },
-                { "bg-zinc-700": mode === "item" && module === current }
-              )}
-              onClick={() => {
-                setCurrent?.(module);
-                window.scrollTo(0, 0);
-              }}
+          {searchFiltered.map((module, index) => (
+            <NavLink
+              to={`/${index}${nested}`}
+              className={({ isActive }: { isActive: boolean }) =>
+                classNames(
+                  "flex py-3 px-3 items-center gap-3 rounded-md cursor-pointer break-all hover:bg-zinc-700",
+                  {
+                    "text-green-500":
+                      singleValidate(module)[0] === ValidationResult.PASS,
+                  },
+                  {
+                    "text-red-600":
+                      singleValidate(module)[0] ===
+                      ValidationResult.WRONG_ERROR,
+                  },
+                  {
+                    "text-orange-500":
+                      singleValidate(module)[0] ===
+                      ValidationResult.SYNTAX_ERROR,
+                  },
+                  {
+                    "bg-zinc-700": isActive,
+                  }
+                )
+              }
             >
               <div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">
                 {module.name ?? "Unknown"}
               </div>
-            </a>
+            </NavLink>
           ))}
         </div>
-        <a
-          class={classNames(
-            "flex py-3 px-3 items-center gap-3 rounded-md cursor-pointer break-all hover:bg-zinc-700",
-            { "bg-zinc-700": mode === "test summary" }
-          )}
-          onClick={() => {
-            setCurrent?.("test summary");
-          }}
+        <NavLink
+          to="/summary"
+          className={({ isActive }: { isActive: boolean }) =>
+            classNames(
+              "flex py-3 px-3 items-center gap-3 rounded-md cursor-pointer break-all hover:bg-zinc-700",
+              { "bg-zinc-700": isActive }
+            )
+          }
         >
-          <div
-            class={classNames(
-              "flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative"
-            )}
-          >
+          <div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative">
             Test Summary
           </div>
-        </a>
+        </NavLink>
       </div>
     </div>
   );

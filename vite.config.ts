@@ -6,6 +6,16 @@ import path from "node:path";
 export default defineConfig({
   root: "./report-page/example",
   plugins: [preact()],
+  define: {
+    "process.env.NODE_ENV": '"production"',
+  },
+  resolve: {
+    alias: {
+      react: "preact/compat",
+      "react-dom": "preact/compat",
+      "react/jsx-runtime": "preact/jsx-runtime",
+    },
+  },
   build: {
     outDir: "../../lib/report-page",
     emptyOutDir: true,

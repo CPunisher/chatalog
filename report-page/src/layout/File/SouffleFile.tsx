@@ -2,12 +2,15 @@ import { SouffleData } from "@chatalog/interface/souffle";
 import classNames from "classnames";
 import { FunctionalComponent } from "preact";
 import { useContext } from "preact/hooks";
+import { useParams } from "react-router-dom";
 import MessageItem from "../../components/MessageItem";
 import ReportContext, { ReportContextProps } from "../../context";
 
 const SouffleFile: FunctionalComponent = () => {
-  const { current } = (useContext(ReportContext) ||
+  const { id = "0" } = useParams();
+  const { data } = (useContext(ReportContext) ||
     {}) as ReportContextProps<SouffleData>;
+  const current = data?.[parseInt(id)];
 
   if (!current) {
     return null;
