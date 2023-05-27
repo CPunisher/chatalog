@@ -26,7 +26,7 @@ const Conversation: FunctionalComponent = () => {
   }
 
   return (
-    <div class="flex h-full flex-col overflow-auto">
+    <div class="flex h-[calc(100%-40px)] flex-col overflow-auto">
       {current.messages.map((message, index) => (
         <Message
           content={message.content}

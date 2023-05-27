@@ -16,7 +16,7 @@ const StringTransFile: FunctionalComponent = () => {
   }
 
   return (
-    <div className="flex h-full flex-col overflow-auto">
+    <div className="flex h-[calc(100%-40px)] flex-col overflow-auto">
       <MessageItem>
         {current.data.examples
           .map(([input, output]) => `${input}, ${output}`)

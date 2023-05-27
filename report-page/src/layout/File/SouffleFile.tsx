@@ -32,7 +32,7 @@ const SouffleFile: FunctionalComponent = () => {
   ];
 
   return (
-    <div className="flex h-full flex-col overflow-auto">
+    <div className="flex h-[calc(100%-40px)] flex-col overflow-auto">
       {list.map(([prompt, content]) => (
         <MessageItem className="odd:bg-gray-50">
           <div className="py-1 font-bold">{prompt}</div>

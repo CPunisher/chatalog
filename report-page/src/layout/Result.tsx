@@ -58,7 +58,7 @@ const Result: FunctionalComponent = () => {
   }
 
   return (
-    <div className="flex h-full flex-col overflow-auto">
+    <div className="flex h-[calc(100%-40px)] flex-col overflow-auto">
       {current.testResult.map((result) => (
         <MessageItem className="even:bg-gray-50">
           <SingleResult result={result} />

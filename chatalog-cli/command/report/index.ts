@@ -23,7 +23,7 @@ ${style}
     </style>
   </head>    
   <body>
-    <main></main>
+    <main id="app"></main>
     <script>
 ${script}
     </script>
