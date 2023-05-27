@@ -4,18 +4,25 @@ import ReportContext from "../context";
 import classNames from "classnames";
 import { Module } from "@chatalog/interface/commons";
 import { ValidationResult, singleValidate } from "../utils/validator";
+import { Link } from "react-router-dom";
+
+interface SummaryEntry {
+  path: string;
+  name: string;
+  accuracy: number;
+}
 
 interface SummaryData {
   total: number;
   trueCase: number;
-  trueList: string[];
+  trueList: SummaryEntry[];
   // false case
   unexpectedCase: number;
-  unexpectedList: [string, number][];
+  unexpectedList: SummaryEntry[];
   syntaxCase: number;
-  syntaxList: [string, number][];
+  syntaxList: SummaryEntry[];
   emptyCase: number;
-  emptyList: string[];
+  emptyList: SummaryEntry[];
 }
 
 function summary(data: Module<unknown>[]): SummaryData {
@@ -32,30 +39,46 @@ function summary(data: Module<unknown>[]): SummaryData {
     emptyList: [],
   };
 
-  for (const entry of data) {
+  for (const [index, entry] of data.entries()) {
     const [validationResult, accuracy] = singleValidate(entry);
     switch (validationResult) {
       case ValidationResult.PASS: {
         summaryData.trueCase++;
-        summaryData.trueList.push(entry.name);
+        summaryData.trueList.push({
+          name: entry.name,
+          accuracy: 1,
+          path: index.toString(),
+        });
         break;
       }
       case ValidationResult.EMPTY_ERROR: {
         // 空结果
         summaryData.emptyCase++;
-        summaryData.emptyList.push(entry.name);
+        summaryData.emptyList.push({
+          name: entry.name,
+          accuracy: 0,
+          path: index.toString(),
+        });
         break;
       }
       case ValidationResult.WRONG_ERROR: {
         // 存在一个不是语法错误的 false case
         summaryData.unexpectedCase++;
-        summaryData.unexpectedList.push([entry.name, accuracy]);
+        summaryData.unexpectedList.push({
+          name: entry.name,
+          accuracy,
+          path: index.toString(),
+        });
         break;
       }
       case ValidationResult.SYNTAX_ERROR: {
         // 语法错误
         summaryData.syntaxCase++;
-        summaryData.syntaxList.push([entry.name, accuracy]);
+        summaryData.syntaxList.push({
+          name: entry.name,
+          accuracy,
+          path: index.toString(),
+        });
         break;
       }
     }
@@ -86,7 +109,7 @@ const Collapse: FunctionalComponent<CollapseProps> = ({
 };
 
 const SummaryTable: FunctionComponent<{
-  entries: [string, number][];
+  entries: SummaryEntry[];
 }> = ({ entries }) => {
   return (
     <table class="block box-border my-3 w-full overflow-auto">
@@ -97,11 +120,13 @@ const SummaryTable: FunctionComponent<{
         </tr>
       </thead>
       <tbody>
-        {entries.map(([data, accuracy]) => (
+        {entries.map((entry) => (
           <tr class="odd:bg-gray-50">
-            <td class="px-3 py-2 border border-gray-300">{data}</td>
             <td class="px-3 py-2 border border-gray-300">
-              {(accuracy * 100).toFixed(3)}%
+              <Link to={`/${entry.path}/result`}>{entry.name}</Link>
+            </td>
+            <td class="px-3 py-2 border border-gray-300">
+              {(entry.accuracy * 100).toFixed(3)}%
             </td>
           </tr>
         ))}
@@ -128,9 +153,7 @@ const Summary: FunctionalComponent = () => {
           {((summaryData.trueCase / summaryData.total) * 100).toFixed(2)}%
         </span>
         <Collapse>
-          <SummaryTable
-            entries={summaryData.trueList.map((entry) => [entry, 1])}
-          />
+          <SummaryTable entries={summaryData.trueList} />
         </Collapse>
       </div>
       <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
@@ -144,9 +167,7 @@ const Summary: FunctionalComponent = () => {
         <span>空结果: </span>
         <span>{summaryData.emptyCase}</span>
         <Collapse>
-          <SummaryTable
-            entries={summaryData.emptyList.map((entry) => [entry, 0])}
-          />
+          <SummaryTable entries={summaryData.emptyList} />
         </Collapse>
       </div>
       <div className="m-auto p-4 md:max-w-2xl lg:max-w-3xl">
