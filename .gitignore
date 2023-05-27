@@ -3,5 +3,6 @@ node_modules
 dist
 lib
 output
+reports
 .vscode/launch.json
 .vscode/tasks.json
