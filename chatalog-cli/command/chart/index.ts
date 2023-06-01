@@ -1,9 +1,10 @@
-import { Command, Option } from "commander";
+import { Command } from "commander";
 import fsPromise from "fs/promises";
 import path from "path";
 import { ChartOptions } from "./interface";
 import { Module, TestResult } from "@chatalog/interface/commons";
 import { ChartData } from "@chatalog/interface/chart";
+import { singleValidate } from "@chatalog/utils/validator";
 
 const buildHtmlTemplate = (
   title: string,
@@ -63,24 +64,14 @@ const CommandChart = new Command("chart")
     for (const [templateName, modules] of Object.entries(data)) {
       for (const module of modules) {
         const list = appData[module.name] ?? [];
-        // 最大准确项
-        const { expected, passId } = module.testResult.reduce(
-          (prev, current) =>
-            prev.passId.length <= current.passId.length ? current : prev,
-          {
-            code: "",
-            expected: [],
-            actual: [],
-            passId: [],
-            pass: false,
-          } as TestResult
-        );
+        const [validationResult, accuracy, maxIndex] = singleValidate(module);
         // 三组数据, value 比率, count/total 绝对值，还需要加个结果类型
         list.push({
           templateName,
-          value: 0,
-          count: passId.length,
-          total: expected.length,
+          category: validationResult,
+          value: accuracy,
+          count: module.testResult[maxIndex]?.passId?.length ?? 0,
+          total: module.testResult[maxIndex].expected?.length ?? 0,
         });
         appData[module.name] = list;
       }

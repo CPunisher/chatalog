@@ -3,7 +3,7 @@ import { useContext, useState } from "preact/hooks";
 import ReportContext from "../context";
 import classNames from "classnames";
 import { Module } from "@chatalog/interface/commons";
-import { ValidationResult, singleValidate } from "../utils/validator";
+import { ValidationResult, singleValidate } from "@chatalog/utils/validator";
 import { Link } from "react-router-dom";
 
 interface SummaryEntry {

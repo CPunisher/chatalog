@@ -2,7 +2,10 @@ import { FunctionalComponent } from "preact";
 import { useContext, useMemo, useState } from "preact/hooks";
 import ReportContext from "../context";
 import classNames from "classnames";
-import { ValidationResult, singleValidate } from "../utils/validator";
+import {
+  ValidationResult,
+  singleValidate,
+} from "../../../chatalog/utils/validator";
 import { NavLink, useLocation } from "react-router-dom";
 
 const Sidebar: FunctionalComponent = () => {

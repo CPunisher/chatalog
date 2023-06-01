@@ -13,13 +13,14 @@ function isError(out: string[]) {
 
 export function singleValidate(
   entry: Module<unknown>
-): [ValidationResult, number] {
+): [ValidationResult, number, number] {
   const { testResult } = entry;
   // 存在 pass
-  if (testResult.some((r) => r.pass)) return [ValidationResult.PASS, 1];
+  const passIndex = testResult.findIndex((r) => r.pass);
+  if (passIndex > -1) return [ValidationResult.PASS, 1, passIndex];
   else {
     // 空结果
-    if (!testResult.length) return [ValidationResult.EMPTY_ERROR, 0];
+    if (!testResult.length) return [ValidationResult.EMPTY_ERROR, 0, -1];
 
     // 取最大正确率
     const [max, maxIndex] = testResult.reduce(
@@ -32,8 +33,8 @@ export function singleValidate(
     );
 
     if (!isError(testResult[maxIndex].actual)) {
-      return [ValidationResult.WRONG_ERROR, max];
+      return [ValidationResult.WRONG_ERROR, max, maxIndex];
     }
-    return [ValidationResult.SYNTAX_ERROR, max];
+    return [ValidationResult.SYNTAX_ERROR, max, maxIndex];
   }
 }
