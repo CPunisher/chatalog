@@ -71,7 +71,7 @@ const CommandChart = new Command("chart")
           category: validationResult,
           value: accuracy,
           count: module.testResult[maxIndex]?.passId?.length ?? 0,
-          total: module.testResult[maxIndex].expected?.length ?? 0,
+          total: module.testResult[maxIndex]?.expected?.length ?? 0,
         });
         appData[module.name] = list;
       }

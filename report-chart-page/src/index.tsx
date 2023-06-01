@@ -1,7 +1,7 @@
 import { FunctionalComponent, render } from "preact";
 import "./index.css";
 import { ChartData } from "@chatalog/interface/chart";
-import Chart from "./Chart";
+import ModuleChart from "./ModuleChart";
 
 const App: FunctionalComponent<{
   // fileName -> ChartData
@@ -9,10 +9,13 @@ const App: FunctionalComponent<{
 }> = ({ data }) => {
   return (
     <div>
+      <div>
+        <h2>Score</h2>
+      </div>
       {Object.entries(data).map(([fileName, chartData]) => (
         <div>
           <h2>{fileName}</h2>
-          <Chart data={chartData} />
+          <ModuleChart data={chartData} />
         </div>
       ))}
     </div>

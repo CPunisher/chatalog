@@ -1,18 +1,18 @@
 import { FunctionalComponent } from "preact";
 import { useEffect, useRef } from "preact/hooks";
-import { Line } from "@antv/g2plot";
+import { Column } from "@antv/g2plot";
 import { ChartData } from "@chatalog/interface/chart";
 
 function format(v: number) {
   return `${(v * 100).toFixed(0)}%`;
 }
 
-const Chart: FunctionalComponent<{
+const ModuleChart: FunctionalComponent<{
   data: ChartData;
 }> = ({ data }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    const line = new Line(containerRef.current!, {
+    const column = new Column(containerRef.current!, {
       data,
       xField: "templateName",
       yField: "value",
@@ -25,11 +25,11 @@ const Chart: FunctionalComponent<{
         content: (item) => format(item.value),
       },
     });
-    line.render();
-    return () => line.destroy();
+    column.render();
+    return () => column.destroy();
   }, []);
 
   return <div ref={containerRef} />;
 };
 
-export default Chart;
+export default ModuleChart;
