@@ -4,7 +4,7 @@ import path from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: "./report-page/example",
+  root: path.join(__dirname, "./example"),
   plugins: [preact()],
   define: {
     "process.env.NODE_ENV": '"production"',
@@ -20,7 +20,7 @@ export default defineConfig({
     outDir: "../../lib/report-page",
     emptyOutDir: true,
     lib: {
-      entry: path.resolve(__dirname, "report-page/src/index.tsx"),
+      entry: path.resolve(__dirname, "./src/index.tsx"),
       formats: ["iife"],
       name: "renderReports",
       fileName: () => "index.js",

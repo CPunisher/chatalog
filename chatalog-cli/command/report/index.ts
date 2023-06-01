@@ -75,4 +75,4 @@ const CommandReport = new Command("report")
     await fsPromise.writeFile(outFile, html);
   });
 
-export default CommandReport;
+export { CommandReport };

@@ -10,8 +10,10 @@
   "scripts": {
     "node-service": "tsx node-service/index.ts",
     "cli": "tsx chatalog-cli/index.ts",
-    "dev:report": "vite",
-    "build:report": "vite build"
+    "dev:report": "vite --config report-page/vite.config.ts",
+    "build:report": "vite build --config report-page/vite.config.ts",
+    "dev:chart": "vite --config report-chart-page/vite.config.ts",
+    "build:chart": "vite build --config report-chart-page/vite.config.ts"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
@@ -29,6 +31,7 @@
     "vite": "^4.3.6"
   },
   "dependencies": {
+    "@antv/g2plot": "^2.4.31",
     "@commander-js/extra-typings": "^10.0.3",
     "@types/hast": "^2.3.4",
     "async-retry": "^1.3.3",

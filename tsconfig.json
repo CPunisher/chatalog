@@ -3,7 +3,8 @@
     "node-service/**/*",
     "chatalog-cli/**/*",
     "chatalog/**/*",
-    "report-page/**/*"
+    "report-page/**/*",
+    "report-chart-page/**/*"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
@@ -16,14 +17,10 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "lib": [
-      "ES6"
-    ],
+    "lib": ["ES6"],
     "esModuleInterop": true,
     "paths": {
-      "@chatalog/*": [
-        "./chatalog/*"
-      ],
+      "@chatalog/*": ["./chatalog/*"]
     }
   }
 }
