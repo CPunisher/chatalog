@@ -24,7 +24,17 @@ const StringTrans: ValidateConfig<StringTransData> = {
         }
       }
     }
-    return codes;
+    const noTestCodes = codes.map(code => {
+      let lastReturn = 0;
+      const lines = code.split('\n');
+      for (const [index, line] of lines.entries()) {
+        if (line.includes('return ')) {
+          lastReturn = index;
+        }
+      }
+      return lines.slice(0, lastReturn + 1).join('\n');
+    });
+    return noTestCodes;
   },
   doValidate: async (target, code, module) => {
     const functionName = code.match(/def (\w*)/)?.[1];

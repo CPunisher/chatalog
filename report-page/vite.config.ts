@@ -14,6 +14,7 @@ export default defineConfig({
       react: "preact/compat",
       "react-dom": "preact/compat",
       "react/jsx-runtime": "preact/jsx-runtime",
+      "@chatalog": path.join(__dirname, "..", "chatalog"),
     },
   },
   build: {

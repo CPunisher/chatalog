@@ -12,7 +12,8 @@ const Message: FunctionalComponent<ConvMessage> = ({ content, role }) => {
   const htmlContent = useAutoHiglightCode(content);
   return (
     <MessageItem className={classNames({ "bg-gray-50": role === "system" })}>
-      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+      {/* <div dangerouslySetInnerHTML={{ __html: htmlContent }} /> */}
+      <div>{content}</div>
     </MessageItem>
   );
 };

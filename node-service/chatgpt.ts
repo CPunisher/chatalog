@@ -11,6 +11,7 @@ import {
 interface ChatGPTAPIConfig {
   token?: string;
   proxy?: string;
+  gpt4?: boolean;
 }
 
 function loadConfig(): ChatGPTAPIConfig {
@@ -20,6 +21,7 @@ function loadConfig(): ChatGPTAPIConfig {
       process.env.HTTPS_PROXY ||
       process.env.HTTP_PROXY ||
       process.env.ALL_PROXY,
+    gpt4: Boolean(process.env.GPT4) || false,
   };
 }
 
@@ -31,11 +33,21 @@ export default async function useChatGPT(app: Express) {
     // apiReverseProxyUrl: "https://gpt.pawan.krd/backend-api/conversation",
     apiReverseProxyUrl: "https://freechat.xyhelper.cn/backend-api/conversation",
     accessToken: config.token ?? "",
-    fetch: (input: RequestInfo | URL, init?: object) =>
-      nodeFetch(input as any, {
+    // model: config.gpt4 ? "gpt-4" : undefined,
+    fetch: (input: RequestInfo | URL, init?: any) => {
+      //   const body = JSON.parse(init.body || "{}");
+      //   body["arkose_token"] =
+      //     "8091767a8533e2193.5553066805|r=eu-west-1|meta=3|meta_width=300|metabgclr=transparent|metaiconclr=%23555555|guitextcolor=%23000000|pk=35536E1E-65B4-4D96-9D97-6ADB7EFF8147|at=40|sup=1|rid=100|ag=101|cdn_url=https%3A%2F%2Ftcr9i.chat.openai.com%2Fcdn%2Ffc|lurl=https%3A%2F%2Faudio-eu-west-1.arkoselabs.com|surl=https%3A%2F%2Ftcr9i.chat.openai.com|smurl=https%3A%2F%2Ftcr9i.chat.openai.com%2Fcdn%2Ffc%2Fassets%2Fstyle-manager";
+      //   init = {
+      //     ...init,
+      //     body: JSON.stringify(body),
+      //   };
+
+      return nodeFetch(input as any, {
         agent: config.proxy ? createHttpsProxyAgent(config.proxy) : undefined,
         ...init,
-      }) as any,
+      }) as any;
+    },
   });
 
   app.post("/message", async (req, res) => {
